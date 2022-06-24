@@ -1,0 +1,280 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://scenes/UI/singleView.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Menus/MainMenu.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scripts/Control.gd" type="Script" id=3]
+[ext_resource path="res://scenes/Levels/World.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/camera.tscn" type="PackedScene" id=5]
+[ext_resource path="res://sprites/logo.png" type="Texture" id=6]
+[ext_resource path="res://scenes/Orbs/OrbCase.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scripts/menus.gd" type="Script" id=8]
+[ext_resource path="res://fonts/uiTheme.tres" type="Theme" id=9]
+[ext_resource path="res://scenes/UI/map.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/UI/multiView.tscn" type="PackedScene" id=11]
+[ext_resource path="res://scenes/jumpGuage.tscn" type="PackedScene" id=12]
+[ext_resource path="res://sprites/dead.png" type="Texture" id=13]
+[ext_resource path="res://scenes/UI/thumbStick.gd" type="Script" id=14]
+[ext_resource path="res://audio/Ambience1.wav" type="AudioStream" id=15]
+[ext_resource path="res://viewportShader.tres" type="Shader" id=16]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform float colors : hint_range(1.0, 32.0);
+uniform float dither : hint_range(0.0, 0.5);
+
+void fragment()
+{
+	vec4 color = texture(TEXTURE, UV);
+	
+	float a = floor(mod(UV.x / TEXTURE_PIXEL_SIZE.x, 2.0));
+	float b = floor(mod(UV.y / TEXTURE_PIXEL_SIZE.y, 2.0));	
+	float c = mod(a + b, 2.0);
+	
+	COLOR.r = (round(color.r * colors + dither) / colors) * c;
+	COLOR.g = (round(color.g * colors + dither) / colors) * c;
+	COLOR.b = (round(color.b * colors + dither) / colors) * c;
+	c = 1.0 - c;
+	COLOR.r += (round(color.r * colors - dither) / colors) * c;
+	COLOR.g += (round(color.g * colors - dither) / colors) * c;
+	COLOR.b += (round(color.b * colors - dither) / colors) * c;
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/colors = 24.0
+shader_param/dither = 0.15
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 16 )
+shader_param/overlay = true
+shader_param/scanlines_opacity = 0.054
+shader_param/scanlines_width = 0.416
+shader_param/grille_opacity = 0.075
+shader_param/resolution = Vector2( 512, 448 )
+shader_param/pixelate = true
+shader_param/roll = true
+shader_param/roll_speed = 0.6
+shader_param/roll_size = 10.0
+shader_param/roll_variation = 3.9
+shader_param/distort_intensity = 0.01
+shader_param/noise_opacity = 0.18
+shader_param/noise_speed = 6.0
+shader_param/static_noise_intensity = 0.026
+shader_param/aberration = 0.02
+shader_param/brightness = 2.2
+shader_param/discolor = false
+shader_param/warp_amount = 0.2
+shader_param/clip_warp = false
+shader_param/vignette_intensity = 0.32
+shader_param/vignette_opacity = 0.6
+
+[node name="Control" type="Control"]
+pause_mode = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+music = NodePath("audio/music")
+single = NodePath("singleView")
+view = NodePath("singleView/Viewport")
+mainMenu = NodePath("singleView/Viewport/MainMenu")
+pauseMenu = NodePath("pauseMenu")
+map = NodePath("map")
+multi = ExtResource( 11 )
+level1 = ExtResource( 4 )
+
+[node name="singleView" parent="." instance=ExtResource( 1 )]
+pause_mode = 1
+material = SubResource( 4 )
+
+[node name="camera" parent="singleView/Viewport" index="0" instance=ExtResource( 5 )]
+
+[node name="logo" type="TextureRect" parent="singleView/Viewport" index="1"]
+anchor_left = -0.0833333
+anchor_top = 0.0444444
+anchor_right = -0.0833333
+anchor_bottom = 0.0444444
+margin_left = 160.0
+margin_top = -48.0
+margin_right = 2080.0
+margin_bottom = 1033.0
+texture = ExtResource( 6 )
+
+[node name="MainMenu" parent="singleView/Viewport" index="2" instance=ExtResource( 2 )]
+position = Vector2( 968, 0 )
+
+[node name="pauseMenu" type="Node2D" parent="."]
+pause_mode = 2
+position = Vector2( 819, 1278 )
+script = ExtResource( 8 )
+
+[node name="tween" type="Tween" parent="pauseMenu"]
+
+[node name="ColorRect2" type="ColorRect" parent="pauseMenu"]
+margin_left = -46.0
+margin_top = -50.0
+margin_right = 374.0
+margin_bottom = 220.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="ColorRect" type="ColorRect" parent="pauseMenu"]
+margin_left = -37.0
+margin_top = -41.0
+margin_right = 363.0
+margin_bottom = 209.0
+color = Color( 0.188235, 0.270588, 0.337255, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="pauseMenu"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="pauseMenu/VBoxContainer"]
+margin_right = 330.0
+margin_bottom = 61.0
+theme = ExtResource( 9 )
+text = "game paused"
+
+[node name="map" parent="." instance=ExtResource( 10 )]
+
+[node name="OrbCase" parent="." instance=ExtResource( 7 )]
+visible = false
+position = Vector2( 104, 968 )
+
+[node name="jumpGauge" parent="." instance=ExtResource( 12 )]
+visible = false
+position = Vector2( 1816, 947 )
+
+[node name="virtualController" type="Control" parent="."]
+visible = false
+margin_left = 264.0
+margin_top = 732.0
+margin_right = 304.0
+margin_bottom = 772.0
+
+[node name="thumbStick" type="Control" parent="virtualController"]
+margin_left = -44.0
+margin_top = -248.0
+margin_right = 406.0
+margin_bottom = 202.0
+script = ExtResource( 14 )
+background_color = Color( 0.462745, 0.54902, 0.670588, 0.560784 )
+background_stroke_color = Color( 0.462745, 0.54902, 0.670588, 1 )
+background_radius = 170
+foreground_color = Color( 0.4623, 0.548842, 0.67, 1 )
+foreground_stroke_color = Color( 0.168627, 0.141176, 0.231373, 1 )
+foreground_radius = 70
+
+[node name="savControls" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 545, 115 )
+scale = Vector2( 0.102921, 0.0885417 )
+normal = ExtResource( 13 )
+
+[node name="aliControls" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 849, 105 )
+scale = Vector2( 0.102921, 0.0885417 )
+normal = ExtResource( 13 )
+
+[node name="left" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( -66, -207 )
+scale = Vector2( 0.107789, 0.404167 )
+normal = ExtResource( 13 )
+passby_press = true
+action = "left"
+
+[node name="right" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 256, -204 )
+scale = Vector2( 0.109875, 0.389583 )
+normal = ExtResource( 13 )
+passby_press = true
+action = "right"
+
+[node name="up" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( -64, -211 )
+scale = Vector2( 0.334492, 0.141667 )
+normal = ExtResource( 13 )
+passby_press = true
+action = "up"
+
+[node name="down" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( -67, 73 )
+scale = Vector2( 0.334492, 0.111459 )
+normal = ExtResource( 13 )
+passby_press = true
+action = "down"
+
+[node name="run" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 1098, -89 )
+scale = Vector2( 0.112656, 0.172917 )
+normal = ExtResource( 13 )
+action = "run"
+
+[node name="Label4" type="Label" parent="virtualController"]
+margin_left = 1131.0
+margin_top = -36.9999
+margin_right = 1251.0
+margin_bottom = 24.0001
+theme = ExtResource( 9 )
+text = "run"
+
+[node name="grab" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 1440, -85 )
+scale = Vector2( 0.112656, 0.151042 )
+normal = ExtResource( 13 )
+action = "grab"
+
+[node name="Label3" type="Label" parent="virtualController"]
+margin_left = 1463.0
+margin_top = -45.9999
+margin_right = 1583.0
+margin_bottom = 15.0001
+theme = ExtResource( 9 )
+text = "grab"
+
+[node name="help" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 1259, -211 )
+scale = Vector2( 0.130042, 0.1375 )
+normal = ExtResource( 13 )
+action = "help"
+
+[node name="Label2" type="Label" parent="virtualController"]
+margin_left = 1293.0
+margin_top = -178.0
+margin_right = 1413.0
+margin_bottom = -117.0
+theme = ExtResource( 9 )
+text = "help"
+
+[node name="hit" type="TouchScreenButton" parent="virtualController"]
+position = Vector2( 1254, 64 )
+scale = Vector2( 0.131433, 0.1375 )
+normal = ExtResource( 13 )
+action = "hit"
+
+[node name="Label" type="Label" parent="virtualController"]
+margin_left = 1299.0
+margin_top = 97.0001
+margin_right = 1389.0
+margin_bottom = 158.0
+theme = ExtResource( 9 )
+text = "hit"
+
+[node name="cRT_Filter" type="ColorRect" parent="."]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="audio" type="Node" parent="."]
+
+[node name="music" type="AudioStreamPlayer" parent="audio"]
+stream = ExtResource( 15 )
+volume_db = -17.68
+pitch_scale = 0.84
+bus = "Normal"
+
+[node name="sfx" type="AudioStreamPlayer" parent="audio"]
+
+[editable path="singleView"]
+[editable path="singleView/Viewport/MainMenu"]
+[editable path="singleView/Viewport/MainMenu/startButtons"]
+[editable path="singleView/Viewport/MainMenu/langButtons"]
+[editable path="singleView/Viewport/MainMenu/langButtons/LanguageMenu"]

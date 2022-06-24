@@ -1,0 +1,19 @@
+[gd_scene format=2]
+
+[node name="hitParticle" type="Node2D"]
+
+[node name="Particles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 200
+lifetime = 2.0
+one_shot = true
+speed_scale = 1.5
+explosiveness = 0.69
+randomness = 0.35
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 25.0
+gravity = Vector2( 0, 1 )
+scale_amount = 2.0
+scale_amount_random = 1.0
+color = Color( 0.419608, 0.752941, 0.819608, 0.380392 )

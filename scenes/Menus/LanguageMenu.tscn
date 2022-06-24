@@ -1,0 +1,74 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://fonts/uiTheme.tres" type="Theme" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[node name="LanguageMenu" type="VBoxContainer"]
+margin_right = 138.0
+margin_bottom = 180.0
+
+[node name="EnglishButton" type="Button" parent="."]
+margin_right = 138.0
+margin_bottom = 42.0
+theme = ExtResource( 1 )
+custom_styles/focus = SubResource( 1 )
+toggle_mode = true
+text = "english"
+flat = true
+align = 0
+
+[node name="GermanButton" type="Button" parent="."]
+margin_top = 46.0
+margin_right = 138.0
+margin_bottom = 88.0
+theme = ExtResource( 1 )
+custom_styles/focus = SubResource( 2 )
+toggle_mode = true
+text = "deutsch"
+flat = true
+align = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="JapaneseButton" type="Button" parent="."]
+margin_top = 92.0
+margin_right = 138.0
+margin_bottom = 134.0
+theme = ExtResource( 1 )
+custom_styles/focus = SubResource( 3 )
+toggle_mode = true
+text = "日本語"
+flat = true
+align = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RomanianButton" type="Button" parent="."]
+margin_top = 138.0
+margin_right = 138.0
+margin_bottom = 180.0
+theme = ExtResource( 1 )
+custom_styles/focus = SubResource( 3 )
+toggle_mode = true
+text = "română"
+flat = true
+align = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="button_down" from="EnglishButton" to="EnglishButton" method="_on_EnglishButton_button_down"]
+[connection signal="button_up" from="EnglishButton" to="EnglishButton" method="_on_EnglishButton_button_up"]
+[connection signal="button_down" from="GermanButton" to="GermanButton" method="_on_GermanButton_button_down"]
+[connection signal="button_up" from="GermanButton" to="GermanButton" method="_on_GermanButton_button_up"]
+[connection signal="button_down" from="JapaneseButton" to="JapaneseButton" method="_on_JapaneseButton_button_down"]
+[connection signal="button_up" from="JapaneseButton" to="JapaneseButton" method="_on_JapaneseButton_button_up"]
+[connection signal="button_down" from="RomanianButton" to="RomanianButton" method="_on_JapaneseButton_button_down"]
+[connection signal="button_up" from="RomanianButton" to="RomanianButton" method="_on_JapaneseButton_button_up"]

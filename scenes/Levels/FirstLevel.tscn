@@ -1,0 +1,243 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://scenes/players/alizea.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Objects/Door.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Orbs/Flat7Arc.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/players/saviya.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/Objects/ParallaxBackground.tscn" type="PackedScene" id=5]
+[ext_resource path="res://sprites/Tile Sets/FloorTiles001.tres" type="TileSet" id=6]
+[ext_resource path="res://scripts/Objects/Doors/OpenDoor.gd" type="Script" id=7]
+[ext_resource path="res://scenes/Orbs/Orb.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/Objects/Spikes.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/Objects/HalfFloor.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scripts/Objects/Doors/LockedDoor.gd" type="Script" id=11]
+
+[node name="Level One" type="Node2D"]
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="ParallaxBackground" parent="Background" instance=ExtResource( 5 )]
+
+[node name="TileMap" type="TileMap" parent="Background"]
+tile_set = ExtResource( 6 )
+cell_size = Vector2( 16, 16 )
+format = 1
+tile_data = PoolIntArray( -720869, 2, 0, -720866, 0, 0, -655333, 0, 0, -655330, 0, 0, -655329, 0, 0, -589798, 0, 0, -589793, 0, 0, -524262, 0, 0, -524257, 0, 0, -524256, 0, 0, -458727, 0, 0, -458726, 0, 0, -458719, 0, 0, -393191, 0, 0, -393183, 0, 0, -327656, 0, 0, -327655, 0, 0, -327646, 0, 0, -327645, 0, 0, -262139, 1, 0, -262138, 1, 0, -262137, 1, 0, -262136, 1, 0, -262135, 1, 0, -262134, 1, 0, -262133, 1, 0, -262132, 1, 0, -262131, 1, 0, -262130, 1, 0, -262129, 1, 0, -262128, 1, 0, -262127, 1, 0, -262126, 1, 0, -262125, 1, 0, -262124, 1, 0, -262123, 1, 0, -262122, 1, 0, -262121, 1, 0, -262120, 0, 0, -262109, 0, 0, -262108, 0, 0, -262107, 0, 0, -262106, 0, 0, -262105, 0, 0, -262104, 0, 0, -262103, 0, 0, -262102, 0, 0, -262101, 0, 0, -262100, 0, 0, -262099, 0, 0, -262098, 0, 0, -262097, 0, 0, -262096, 0, 0, -262095, 0, 0, -262094, 0, 0, -262093, 0, 0, -262092, 0, 0, -262091, 0, 0, -196604, 1, 0, -196554, 0, 0, -196553, 0, 0, -196552, 0, 0, -131068, 1, 0, -131016, 0, 0, -131015, 0, 0, -131014, 0, 0, -65533, 1, 0, -65529, 1, 0, -65528, 1, 0, -65527, 1, 0, -65526, 1, 0, -65525, 1, 0, -65524, 1, 0, -65523, 1, 0, -65522, 1, 0, -65521, 1, 0, -65520, 1, 0, -65519, 1, 0, -65518, 1, 0, -65517, 1, 0, -65516, 1, 0, -65515, 1, 0, -65514, 1, 0, -65513, 1, 0, -65512, 1, 0, -65511, 1, 0, -65510, 1, 0, -65509, 2, 0, -65508, 1, 0, -65507, 1, 0, -65506, 1, 0, -65505, 1, 0, -65504, 1, 0, -65503, 1, 0, -65502, 1, 0, -65501, 1, 0, -65500, 1, 0, -65499, 1, 0, -65498, 1, 0, -65478, 0, 0, -65477, 0, 0, 3, 1, 0, 6, 2, 0, 60, 0, 0, 65539, 1, 0, 65542, 2, 0, 65597, 0, 0, 131075, 1, 0, 131078, 2, 0, 131134, 0, 0, 196611, 1, 0, 196614, 2, 0, 196646, 0, 0, 196647, 0, 0, 196648, 0, 0, 196649, 0, 0, 196650, 0, 0, 196670, 0, 0, 262147, 1, 0, 262150, 2, 0, 262151, 2, 0, 262152, 2, 0, 262153, 2, 0, 262154, 2, 0, 262155, 2, 0, 262156, 2, 0, 262157, 2, 0, 262158, 2, 0, 262159, 2, 0, 262160, 2, 0, 262161, 2, 0, 262206, 0, 0, 327683, 1, 0, 327686, 2, 0, 327742, 0, 0, 393219, 1, 0, 393222, 2, 0, 393238, 2, 0, 393239, 2, 0, 393240, 2, 0, 393241, 2, 0, 393278, 0, 0, 458755, 1, 0, 458758, 2, 0, 458794, 0, 0, 458795, 0, 0, 458796, 0, 0, 458797, 0, 0, 458798, 0, 0, 458814, 0, 0, 524291, 1, 0, 524294, 2, 0, 524350, 0, 0, 589827, 1, 0, 589830, 2, 0, 589854, 2, 0, 589855, 2, 0, 589856, 2, 0, 589857, 1, 0, 589858, 1, 0, 589859, 1, 0, 589886, 0, 0, 655360, 1, 0, 655361, 1, 0, 655362, 1, 0, 655363, 1, 0, 655366, 2, 0, 655390, 2, 0, 655422, 0, 0, 720896, 1, 0, 720902, 2, 0, 720926, 2, 0, 720942, 0, 0, 720943, 0, 0, 720944, 0, 0, 720945, 0, 0, 720946, 0, 0, 720958, 0, 0, 786432, 1, 0, 786438, 2, 0, 786446, 2, 0, 786447, 2, 0, 786454, 2, 0, 786455, 2, 0, 786456, 2, 0, 786457, 2, 0, 786458, 2, 0, 786459, 2, 0, 786460, 2, 0, 786461, 2, 0, 786462, 2, 0, 786471, 2, 0, 786494, 0, 0, 851968, 1, 0, 851971, 1610612739, 0, 851972, 2, 0, 851973, 2, 0, 851974, 2, 0, 851990, 2, 0, 852007, 2, 0, 852030, 0, 0, 917504, 1, 0, 917507, -1610612736, 0, 917526, 2, 0, 917543, 2, 0, 917566, 0, 0, 983040, 1, 0, 983043, -1610612733, 0, 983062, 2, 0, 983079, 2, 0, 983090, 0, 0, 983091, 0, 0, 983092, 0, 0, 983093, 0, 0, 983094, 0, 0, 983095, 0, 0, 983096, 0, 0, 983097, 0, 0, 983098, 0, 0, 983099, 0, 0, 983100, 0, 0, 983101, 0, 0, 983102, 0, 0, 1048576, 1, 0, 1048579, 0, 0, 1048580, 1, 0, 1048581, 1, 0, 1048582, 1, 0, 1048583, 1, 0, 1048584, 1, 0, 1048585, 1, 0, 1048586, 1, 0, 1048599, 2, 0, 1048600, 2, 0, 1048614, 2, 0, 1048626, 0, 0, 1114112, 1, 0, 1114123, 1, 0, 1114136, 2, 0, 1114143, 1, 0, 1114144, 1, 0, 1114145, 1, 0, 1114146, 1, 0, 1114147, 1, 0, 1114148, 1, 0, 1114149, 1, 0, 1114162, 0, 0, 1179648, 1, 0, 1179660, 1, 0, 1179672, 2, 0, 1179698, 0, 0, 1245184, 1, 0, 1245197, 2, 0, 1245208, 2, 0, 1245234, 0, 0, 1310720, 1, 0, 1310734, 0, 0, 1310735, 1, 0, 1310736, 1, 0, 1310737, 1, 0, 1310738, 2, 0, 1310739, 2, 0, 1310745, 1, 0, 1310746, 1, 0, 1310747, 1, 0, 1310748, 1, 0, 1310761, 2, 0, 1310770, 0, 0, 1376256, 1, 0, 1376259, 6, 0, 1376260, 7, 0, 1376270, 1, 0, 1376285, 2, 0, 1376297, 2, 0, 1376306, 0, 0, 1441792, 1, 0, 1441793, 1, 0, 1441794, 1, 0, 1441795, 1, 0, 1441796, 1, 0, 1441797, 1, 0, 1441798, 1, 0, 1441799, 2, 0, 1441806, 1, 0, 1441822, 2, 0, 1441830, 6, 0, 1441831, 7, 0, 1441833, 2, 0, 1441842, 0, 0, 1507335, 2, 0, 1507359, 2, 0, 1507365, 2, 0, 1507366, 2, 0, 1507367, 2, 0, 1507368, 2, 0, 1507369, 2, 0, 1507378, 0, 0, 1572871, 2, 0, 1572872, 0, 0, 1572883, 2, 0, 1572884, 2, 0, 1572885, 2, 0, 1572886, 2, 0, 1572887, 2, 0, 1572888, 2, 0, 1572889, 2, 0, 1572890, 2, 0, 1572891, 2, 0, 1572892, 2, 0, 1572893, 2, 0, 1572894, 2, 0, 1572895, 2, 0, 1572901, 1, 0, 1572914, 0, 0, 1638407, 2, 0, 1638414, 0, 0, 1638415, 0, 0, 1638416, 0, 0, 1638417, 0, 0, 1638418, 0, 0, 1638419, 0, 0, 1638437, 1, 0, 1638450, 0, 0, 1703940, 0, 0, 1703941, 0, 0, 1703942, 0, 0, 1703943, 2, 0, 1703973, 2, 0, 1703986, 0, 0, 1769476, 0, 0, 1769493, 2, 0, 1769494, 2, 0, 1769495, 2, 0, 1769496, 2, 0, 1769497, 2, 0, 1769498, 2, 0, 1769499, 2, 0, 1769500, 2, 0, 1769501, 2, 0, 1769502, 2, 0, 1769503, 2, 0, 1769504, 2, 0, 1769505, 2, 0, 1769506, 2, 0, 1769507, 2, 0, 1769508, 2, 0, 1769509, 2, 0, 1769522, 0, 0, 1835012, 0, 0, 1835013, 0, 0, 1835014, 0, 0, 1835015, 2, 0, 1835022, 1, 0, 1835058, 0, 0, 1900551, 2, 0, 1900558, 2, 0, 1900594, 0, 0, 1966087, 2, 0, 1966088, 2, 0, 1966089, 2, 0, 1966090, 2, 0, 1966091, 2, 0, 1966092, 2, 0, 1966093, 2, 0, 1966094, 2, 0, 1966095, 2, 0, 1966096, 2, 0, 1966097, 2, 0, 1966098, 2, 0, 1966099, 2, 0, 1966100, 2, 0, 1966101, 2, 0, 1966102, 2, 0, 1966103, 2, 0, 1966104, 2, 0, 1966105, 2, 0, 1966106, 2, 0, 1966107, 2, 0, 1966108, 2, 0, 1966109, 2, 0, 1966110, 2, 0, 1966111, 2, 0, 1966112, 2, 0, 1966113, 2, 0, 1966114, 2, 0, 1966115, 2, 0, 1966116, 2, 0, 1966117, 2, 0, 1966118, 2, 0, 1966119, 2, 0, 1966120, 2, 0, 1966121, 1, 0, 1966122, 1, 0, 1966123, 1, 0, 1966124, 1, 0, 1966125, 2, 0, 1966126, 2, 0, 1966127, 0, 0, 1966128, 0, 0, 1966129, 0, 0, 1966130, 0, 0 )
+
+[node name="EnvironmentBehind" type="Node2D" parent="."]
+
+[node name="Belts" type="Node2D" parent="EnvironmentBehind"]
+
+[node name="HalfFloor12" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 295.883, 386.074 )
+
+[node name="HalfFloor26" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 201.255, 434.201 )
+
+[node name="HalfFloor27" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 134.876, 437.909 )
+
+[node name="HalfFloor28" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 151.136, 437.379 )
+
+[node name="HalfFloor29" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 119.352, 437.379 )
+
+[node name="HalfFloor30" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 103.46, 437.379 )
+
+[node name="HalfFloor31" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 87.5678, 437.909 )
+
+[node name="HalfFloor13" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 279.888, 386.074 )
+
+[node name="HalfFloor14" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 263.893, 386.214 )
+
+[node name="HalfFloor15" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 247.897, 386.074 )
+
+[node name="HalfFloor16" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 327.888, 434.247 )
+
+[node name="HalfFloor17" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 311.996, 434.247 )
+
+[node name="HalfFloor18" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 296.369, 434.247 )
+
+[node name="HalfFloor19" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 280.477, 434.247 )
+
+[node name="HalfFloor20" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 264.85, 434.247 )
+
+[node name="HalfFloor21" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 248.958, 434.247 )
+
+[node name="HalfFloor22" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 233.066, 434.247 )
+
+[node name="HalfFloor23" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 217.174, 434.247 )
+
+[node name="HalfFloor24" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 232.006, 386.041 )
+
+[node name="HalfFloor25" parent="EnvironmentBehind/Belts" instance=ExtResource( 10 )]
+position = Vector2( 216.909, 386.041 )
+
+[node name="Objects" type="Node2D" parent="EnvironmentBehind"]
+
+[node name="Doors" type="Node2D" parent="EnvironmentBehind/Objects"]
+
+[node name="OpenDoor" parent="EnvironmentBehind/Objects/Doors" instance=ExtResource( 2 )]
+position = Vector2( 465.945, -193.993 )
+script = ExtResource( 7 )
+worldScene = "res://World/Environment/Levels/Menus/TitleScreen.tscn"
+
+[node name="LockedDoor" parent="EnvironmentBehind/Objects/Doors" instance=ExtResource( 2 )]
+position = Vector2( 369.073, 416.357 )
+script = ExtResource( 11 )
+worldScene = "res://World/Environment/Levels/SecondLevel.tscn"
+
+[node name="Orbs" type="Node2D" parent="EnvironmentBehind/Objects"]
+
+[node name="Orb1" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 159.6, 248.16 )
+
+[node name="Orb6" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 410.885, 161.488 )
+
+[node name="Orb26" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 464.857, 374.199 )
+
+[node name="Orb7" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 431.802, 133.417 )
+
+[node name="Orb8" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 468.346, 120.953 )
+
+[node name="Orb27" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 722.904, 79.9409 )
+
+[node name="Orb28" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 659.265, 13.4728 )
+
+[node name="Orb29" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 778.059, 146.409 )
+
+[node name="Orb30" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 598.454, -34.6105 )
+
+[node name="Orb2" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 193.115, 254.434 )
+
+[node name="Orb3" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 222.106, 286.961 )
+
+[node name="Orb4" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 246.855, 304.638 )
+
+[node name="Orb5" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 285.039, 308.881 )
+
+[node name="Orb9" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 256.571, 419.756 )
+
+[node name="Orb10" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 279.046, 419.756 )
+
+[node name="Orb11" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 406.402, 424.251 )
+
+[node name="Orb12" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 439.365, 424.251 )
+
+[node name="Orb13" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 511.283, 355.329 )
+
+[node name="Orb14" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 496.3, 341.844 )
+
+[node name="Orb15" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 520.312, 262.662 )
+
+[node name="Orb16" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 475.324, 322.366 )
+
+[node name="Orb17" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 427.378, 290.901 )
+
+[node name="Orb18" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 488.809, 245.952 )
+
+[node name="Orb19" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 571.216, 180.026 )
+
+[node name="Orb20" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 676.556, 219.533 )
+
+[node name="Orb21" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 682.917, 295.212 )
+
+[node name="Orb22" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 689.46, 425.352 )
+
+[node name="Orb23" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 565.222, 470.698 )
+
+[node name="Orb24" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 514.28, 472.196 )
+
+[node name="Orb25" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 8 )]
+position = Vector2( 361.453, 466.203 )
+
+[node name="Flat7Arc" parent="EnvironmentBehind/Objects/Orbs" instance=ExtResource( 3 )]
+
+[node name="PushBox" parent="EnvironmentBehind/Objects" instance=ExtResource( 1 )]
+position = Vector2( 63.8878, 328.675 )
+
+[node name="Spikes" type="Node2D" parent="EnvironmentBehind"]
+
+[node name="Spikes" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 428.183, 190.053 )
+
+[node name="Spikes4" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 205.799, 478.222 )
+
+[node name="Spikes9" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 232.207, 369.782 )
+rotation = 3.14159
+
+[node name="Spikes11" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 232.837, 418.289 )
+rotation = 3.14159
+
+[node name="Spikes10" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 231.752, 383.036 )
+
+[node name="Spikes12" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 231.752, 430.283 )
+
+[node name="Spikes5" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 190.431, 477.945 )
+
+[node name="Spikes6" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 174.181, 478.07 )
+
+[node name="Spikes7" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 158.556, 478.195 )
+
+[node name="Spikes8" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 141.806, 478.57 )
+
+[node name="Spikes2" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 445.933, 190.053 )
+
+[node name="Spikes3" parent="EnvironmentBehind/Spikes" instance=ExtResource( 9 )]
+position = Vector2( 463.933, 190.053 )
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 473.441, -188.286 )

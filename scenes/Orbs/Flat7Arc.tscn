@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/Orbs/Orb.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/Objects/Orbs/Orbs.gd" type="Script" id=2]
+
+
+
+[node name="Flat7Arc" type="Node2D"]
+
+[node name="Orb6" type="Area2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 262.022, 174.746 )
+collision_layer = 4
+script = ExtResource( 2 )
+
+[node name="Orb7" type="Area2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 281.07, 142.998 )
+collision_layer = 4
+script = ExtResource( 2 )
+
+[node name="Orb10" type="Area2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 308.056, 128.711 )
+collision_layer = 4
+script = ExtResource( 2 )
+
+[node name="Orb8" type="Area2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 334.248, 141.41 )
+collision_layer = 4
+script = ExtResource( 2 )
+
+[node name="Orb9" type="Area2D" parent="." instance=ExtResource( 1 )]
+position = Vector2( 352.504, 169.19 )
+collision_layer = 4
+script = ExtResource( 2 )

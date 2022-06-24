@@ -1,0 +1,108 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Scripts/Door.gd" type="Script" id=1]
+[ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Objects/DoorLever.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 24, 22.5 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 22, 23.5 )
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("door:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "close"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("door:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 45 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "open"
+tracks/0/type = "value"
+tracks/0/path = NodePath("door:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 45 ) ]
+}
+
+[node name="Door" type="Area2D"]
+show_behind_parent = true
+light_mask = 2
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.822998, 1.46899 )
+shape = SubResource( 1 )
+
+[node name="backWall" type="Sprite" parent="."]
+show_behind_parent = true
+light_mask = 2
+position = Vector2( 0.658691, 2.03528 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 151, 176, 32, 32 )
+
+[node name="door" type="Sprite" parent="."]
+show_behind_parent = true
+light_mask = 2
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 86.1115, 175.194, 49.8107, 47.9239 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="door"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="door/StaticBody2D"]
+position = Vector2( 0, 0.5 )
+shape = SubResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "close"
+anims/RESET = SubResource( 4 )
+anims/close = SubResource( 2 )
+anims/open = SubResource( 3 )
+
+[node name="DoorLever" parent="." instance=ExtResource( 3 )]
+position = Vector2( -22, 16 )

@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scripts/Power_Zone.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Objects/Lever.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Objects/star.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/Objects/tutorialTheme.tres" type="Theme" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16.3239, 10 )
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 1, 1, 1, 1, 0.526357, 0.402832, 0.805664, 1 )
+
+[node name="powerZone" type="Area2D"]
+script = ExtResource( 1 )
+star = ExtResource( 3 )
+particle = NodePath("particle")
+lever = NodePath("Lever")
+sensor = NodePath("sensor")
+starPos = NodePath("starPosition")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -1 )
+shape = SubResource( 1 )
+
+[node name="particle" type="CPUParticles2D" parent="."]
+show_behind_parent = true
+light_mask = 2
+position = Vector2( 0, 9 )
+amount = 18
+lifetime = 0.6
+speed_scale = 0.45
+randomness = 0.72
+fixed_fps = 14
+emission_shape = 2
+emission_rect_extents = Vector2( 15, 1 )
+gravity = Vector2( 0, -50 )
+color_ramp = SubResource( 2 )
+
+[node name="sensor" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -16.0
+margin_top = 9.0
+margin_right = 16.0
+margin_bottom = 10.0
+color = Color( 0, 0.929412, 1, 0.25098 )
+
+[node name="Label" type="Label" parent="sensor"]
+modulate = Color( 1, 1, 1, 0.439216 )
+show_behind_parent = true
+margin_left = -55.0
+margin_top = -34.0
+margin_right = 97.0
+margin_bottom = 1.0
+theme = ExtResource( 4 )
+text = "press DOWN to forge
+an energy core"
+align = 1
+
+[node name="Lever" parent="." instance=ExtResource( 2 )]
+position = Vector2( -17, 4 )
+
+[node name="starPosition" type="Position2D" parent="."]
+position = Vector2( -25, -4 )
