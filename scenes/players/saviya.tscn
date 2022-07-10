@@ -3,7 +3,7 @@
 [ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=1]
 [ext_resource path="res://audio/walksquoosh.wav" type="AudioStream" id=2]
 [ext_resource path="res://Scripts/saviya.gd" type="Script" id=3]
-[ext_resource path="res://hit.tres" type="Animation" id=4]
+[ext_resource path="res://animations/hit.tres" type="Animation" id=4]
 [ext_resource path="res://scenes/players/hitSpark.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/UI/notification.tscn" type="PackedScene" id=6]
 
@@ -11,6 +11,9 @@
 extents = Vector2( 4.12628, 4.85232 )
 
 [sub_resource type="ShaderMaterial" id=11]
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 6, 1.5 )
 
 [sub_resource type="Animation" id=9]
 length = 0.001
@@ -352,9 +355,6 @@ tracks/3/keys = {
 } ]
 }
 
-[sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 6, 1.5 )
-
 [node name="saviya" type="KinematicBody2D"]
 script = ExtResource( 3 )
 sprite = NodePath("CollisionShape2D/Sprite")
@@ -367,7 +367,7 @@ hitSpark = ExtResource( 5 )
 notification = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0.627556, 2.2453 )
+position = Vector2( 0.440268, 2.01119 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="CollisionShape2D"]
@@ -376,7 +376,7 @@ position = Vector2( 0.262064, -3.01119 )
 texture = ExtResource( 1 )
 hframes = 12
 vframes = 2
-frame = 1
+frame = 2
 region_enabled = true
 region_rect = Rect2( 0, 0, 192, 32 )
 
@@ -392,16 +392,6 @@ emission_shape = 2
 emission_rect_extents = Vector2( 5, 1 )
 scale_amount = 0.2
 color = Color( 0.431373, 0.2, 0.152941, 0.447059 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/RESET = SubResource( 9 )
-anims/damage = SubResource( 3 )
-anims/fall = SubResource( 4 )
-anims/grab = SubResource( 5 )
-anims/hit = ExtResource( 4 )
-anims/idle = SubResource( 6 )
-anims/jump = SubResource( 7 )
-anims/walk = SubResource( 8 )
 
 [node name="sfx" type="Node2D" parent="."]
 
@@ -425,8 +415,18 @@ position = Vector2( -1, 6.5 )
 shape = SubResource( 10 )
 one_way_collision = true
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 9 )
+anims/damage = SubResource( 3 )
+anims/fall = SubResource( 4 )
+anims/grab = SubResource( 5 )
+anims/hit = ExtResource( 4 )
+anims/idle = SubResource( 6 )
+anims/jump = SubResource( 7 )
+anims/walk = SubResource( 8 )
+
 [connection signal="area_entered" from="groundArea" to="." method="_on_groundArea_area_entered"]
 [connection signal="area_exited" from="groundArea" to="." method="_on_groundArea_area_exited"]
 [connection signal="body_entered" from="groundArea" to="." method="_on_groundArea_body_entered"]
 [connection signal="body_exited" from="groundArea" to="." method="_on_groundArea_body_exited"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

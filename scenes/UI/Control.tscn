@@ -11,11 +11,11 @@
 [ext_resource path="res://fonts/uiTheme.tres" type="Theme" id=9]
 [ext_resource path="res://scenes/UI/map.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/UI/multiView.tscn" type="PackedScene" id=11]
-[ext_resource path="res://scenes/jumpGuage.tscn" type="PackedScene" id=12]
+[ext_resource path="res://scenes/UI/jumpGuage.tscn" type="PackedScene" id=12]
 [ext_resource path="res://sprites/dead.png" type="Texture" id=13]
-[ext_resource path="res://scenes/UI/thumbStick.gd" type="Script" id=14]
+[ext_resource path="res://Scripts/shader/viewportShader.tres" type="Shader" id=14]
 [ext_resource path="res://audio/Ambience1.wav" type="AudioStream" id=15]
-[ext_resource path="res://viewportShader.tres" type="Shader" id=16]
+[ext_resource path="res://Scripts/thumbStick.gd" type="Script" id=16]
 
 [sub_resource type="Shader" id=3]
 code = "shader_type canvas_item;
@@ -46,16 +46,16 @@ shader_param/colors = 24.0
 shader_param/dither = 0.15
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 16 )
+shader = ExtResource( 14 )
 shader_param/overlay = true
 shader_param/scanlines_opacity = 0.054
-shader_param/scanlines_width = 0.416
+shader_param/scanlines_width = 0.5
 shader_param/grille_opacity = 0.075
 shader_param/resolution = Vector2( 512, 448 )
 shader_param/pixelate = true
 shader_param/roll = true
 shader_param/roll_speed = 0.6
-shader_param/roll_size = 10.0
+shader_param/roll_size = 6.078
 shader_param/roll_variation = 3.9
 shader_param/distort_intensity = 0.01
 shader_param/noise_opacity = 0.18
@@ -63,11 +63,11 @@ shader_param/noise_speed = 6.0
 shader_param/static_noise_intensity = 0.026
 shader_param/aberration = 0.02
 shader_param/brightness = 2.2
-shader_param/discolor = false
-shader_param/warp_amount = 0.2
+shader_param/discolor = true
+shader_param/warp_amount = 0.08
 shader_param/clip_warp = false
 shader_param/vignette_intensity = 0.32
-shader_param/vignette_opacity = 0.6
+shader_param/vignette_opacity = 0.855
 
 [node name="Control" type="Control"]
 pause_mode = 2
@@ -90,18 +90,17 @@ material = SubResource( 4 )
 [node name="camera" parent="singleView/Viewport" index="0" instance=ExtResource( 5 )]
 
 [node name="logo" type="TextureRect" parent="singleView/Viewport" index="1"]
-anchor_left = -0.0833333
-anchor_top = 0.0444444
-anchor_right = -0.0833333
-anchor_bottom = 0.0444444
-margin_left = 160.0
-margin_top = -48.0
-margin_right = 2080.0
-margin_bottom = 1033.0
+margin_left = 6.10352e-05
+margin_top = -4.57764e-05
+margin_right = 1920.0
+margin_bottom = 1081.0
 texture = ExtResource( 6 )
 
 [node name="MainMenu" parent="singleView/Viewport" index="2" instance=ExtResource( 2 )]
 position = Vector2( 968, 0 )
+
+[node name="singlePlayer" parent="singleView/Viewport/MainMenu/startButtons/vBoxContainer" index="0"]
+pressed = true
 
 [node name="pauseMenu" type="Node2D" parent="."]
 pause_mode = 2
@@ -156,7 +155,7 @@ margin_left = -44.0
 margin_top = -248.0
 margin_right = 406.0
 margin_bottom = 202.0
-script = ExtResource( 14 )
+script = ExtResource( 16 )
 background_color = Color( 0.462745, 0.54902, 0.670588, 0.560784 )
 background_stroke_color = Color( 0.462745, 0.54902, 0.670588, 1 )
 background_radius = 170

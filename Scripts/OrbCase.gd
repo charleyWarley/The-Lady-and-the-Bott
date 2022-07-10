@@ -8,7 +8,10 @@ func _ready() -> void:
 
 
 func _process(_delta) -> void:
+	#if the orbs in the case already match the global number of orbs, ignore the rest of the code
 	if orbs == Global.orbs: return
+	
+	#otherwise, do this:
 	orbs = Global.orbs
 	$Label.set_text(str(orbs))
 	match Global.orbs:

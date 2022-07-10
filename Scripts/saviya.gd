@@ -1,6 +1,6 @@
 extends KinematicBody2D
-#maybe convert this to a rhythm game when able
-signal something_hit
+
+signal camera_shake
 
 const SOUNDS = {
 	"jump": preload("res://audio/jumpEffort.wav"),
@@ -12,6 +12,8 @@ const DRAG_GROUND : float = 0.7
 const DRAG_AIR : float = 0.65
 const GRAV : int = -10
 const JUMP_POWER : int = -250
+
+#the cast_to distance of the ray
 const reachVector := Vector2(100, 0)
 const hitVector := Vector2(16, 0)
 const closeVector := Vector2(10, 0)
@@ -101,7 +103,7 @@ func _physics_process(delta) -> void:
 		Global.orbs = 0
 		isDying = true
 		play_anim("damage")
-		emit_signal("something_hit", 12)
+		emit_signal("camera_shake", 12)
 		return
 	
 	isGrounded = is_on_floor()
@@ -216,7 +218,7 @@ func check_y() -> float:
 		velocity.y = JUMP_POWER
 	return velocity.y
 
-
+#flip everything when the character turns left or right
 func check_flip():
 	if direction.x > 0.0 and !isFlipped:
 		if !isGrabbing: flip()
@@ -224,7 +226,7 @@ func check_flip():
 		if !isGrabbing: flip()
 		
 	if !isFlipped:
-		pos2D.position.x = -3
+		pos2D.position.x = -9
 		if Global.orbs > 0 and canReach: 
 			if isGrabbing: ray.set_cast_to(-reachVector)
 			else: ray.set_cast_to(-hitVector)
@@ -296,7 +298,7 @@ func check_collisions():
 								collider.set_broken(true)
 								collider.get_node("boxCollision").queue_free()
 					if timeCheck > 10: timeCheck = 10
-					emit_signal("something_hit", pow(2, timeCheck))
+					emit_signal("camera_shake", pow(2, timeCheck))
 		
 		if collider.is_in_group("boxes") and !collider.is_in_group("buddy"):
 			isGrabbing = false
@@ -345,7 +347,7 @@ func hit() -> void:
 		else: 
 			collider.apply_central_impulse(Vector2(-80, 0))
 	hits += 1
-	emit_signal("something_hit", pow(1.5, hits))
+	emit_signal("camera_shake", pow(1.5, hits))
 	timePressedHit = get_cur_time()
 	if get_cur_time() - timePressedHit > 1.22: hits = 0
 	if hits > 3: hits = 3

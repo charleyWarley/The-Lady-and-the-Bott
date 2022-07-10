@@ -24,7 +24,7 @@ func _process(_delta) -> void:
 		if off: return
 		match body.name:
 			"saviya":
-				body.emit_signal("something_hit", 1)
+				body.emit_signal("camera_shake", 1)
 				Global.orbs += 1
 				break_it()
 			"alizea":
