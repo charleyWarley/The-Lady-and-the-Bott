@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/lantern.gd" type="Script" id=1]
+[ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=2]
+[ext_resource path="res://sprites/light.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 2, 4 )
+
+[sub_resource type="RectangleShape2D" id=7]
+
+[node name="lantern" type="RigidBody2D"]
+position = Vector2( -696, -533 )
+continuous_cd = 1
+contacts_reported = 1
+contact_monitor = true
+script = ExtResource( 1 )
+light = NodePath("light")
+collision = NodePath("CollisionShape2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 6 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 7 )
+
+[node name="light" type="Light2D" parent="."]
+show_behind_parent = true
+texture = ExtResource( 3 )
+mode = 3
+range_height = 1.0
+shadow_enabled = true
+shadow_gradient_length = 2.0
+shadow_filter = 2
+shadow_filter_smooth = 5.3
+
+[node name="Sprite" type="Sprite" parent="light"]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 260, 53, 4, 9 )
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

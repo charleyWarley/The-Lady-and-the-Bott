@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://scenes/Objects/Door.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Levels/ParallaxBackground.tscn" type="PackedScene" id=2]
@@ -8,7 +8,7 @@
 [ext_resource path="res://scenes/Objects/Power_Zone.tscn" type="PackedScene" id=6]
 [ext_resource path="res://fonts/tutorialTheme.tres" type="Theme" id=7]
 [ext_resource path="res://scenes/Orbs/Orb.tscn" type="PackedScene" id=8]
-[ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=9]
+[ext_resource path="res://lantern.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/Objects/orbBox.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/Objects/Drone.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Scripts/movement.gd" type="Script" id=12]
@@ -19,7 +19,6 @@
 [ext_resource path="res://Scripts/dronesAndOrbs.gd" type="Script" id=17]
 [ext_resource path="res://sprites/spot.png" type="Texture" id=18]
 [ext_resource path="res://sprites/light.png" type="Texture" id=19]
-[ext_resource path="res://Scripts/lantern.gd" type="Script" id=20]
 
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 69.5, 10 )
@@ -32,11 +31,6 @@ extents = Vector2( 10.5, 16.5 )
 
 [sub_resource type="PhysicsMaterial" id=2]
 absorbent = true
-
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 2, 4 )
-
-[sub_resource type="RectangleShape2D" id=7]
 
 [node name="World" type="Node2D"]
 position = Vector2( 656, 355 )
@@ -559,37 +553,8 @@ position = Vector2( -368, -333 )
 
 [node name="ParallaxBackground" parent="setting" instance=ExtResource( 2 )]
 
-[node name="lantern" type="RigidBody2D" parent="."]
-position = Vector2( -696, -533 )
-continuous_cd = 1
-contacts_reported = 1
-contact_monitor = true
-script = ExtResource( 20 )
-light = NodePath("light")
-collision = NodePath("CollisionShape2D")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="lantern"]
-shape = SubResource( 6 )
-
-[node name="Area2D" type="Area2D" parent="lantern"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="lantern/Area2D"]
-shape = SubResource( 7 )
-
-[node name="light" type="Light2D" parent="lantern"]
-show_behind_parent = true
-texture = ExtResource( 19 )
-mode = 3
-range_height = 1.0
-shadow_enabled = true
-shadow_gradient_length = 2.0
-shadow_filter = 2
-shadow_filter_smooth = 5.3
-
-[node name="Sprite" type="Sprite" parent="lantern/light"]
-texture = ExtResource( 9 )
-region_enabled = true
-region_rect = Rect2( 260, 53, 4, 9 )
+[node name="lantern" parent="." instance=ExtResource( 9 )]
+light_mask = 513
 
 [node name="alizea" parent="." instance=ExtResource( 3 )]
 position = Vector2( -990, -297 )
@@ -608,4 +573,3 @@ color = Color( 1, 1, 1, 0.0352941 )
 [connection signal="body_entered" from="setting/tutorials/interaction/tutorialArea" to="setting/tutorials/interaction" method="_on_interactionTutorialArea_body_entered"]
 [connection signal="body_entered" from="setting/tutorials/drones/tutorialArea" to="setting/tutorials/drones" method="_on_tutorialArea_body_entered"]
 [connection signal="timeout" from="setting/tutorials/drones/Timer" to="setting/tutorials/drones" method="_on_Timer_timeout"]
-[connection signal="body_entered" from="lantern/Area2D" to="lantern" method="_on_Area2D_body_entered"]
