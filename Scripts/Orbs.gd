@@ -1,12 +1,14 @@
 extends Area2D
 
-var off = false
-var wait = 0
+
 
 const SOUNDS = {
 	"break":
 preload("res://audio/break.wav")
 }
+
+
+var off = false
 
 onready var anim_player = $Sprite/AnimationPlayer
 onready var sfx = $sfx/sfx
@@ -23,15 +25,16 @@ func _process(_delta) -> void:
 	for body in bodies:
 		if off: return
 		match body.name:
-			"saviya":
+			"lady":
 				body.emit_signal("camera_shake", 1)
 				Global.orbs += 1
 				break_it()
-			"alizea":
+			"bott":
 				if body.power < 60:
 					body.power += 1
 				body.power_check()
 				break_it()
+
 
 func break_it() -> void:
 		play_anim("collected")
@@ -50,8 +53,3 @@ func play_snd(snd) -> void:
 	if SOUNDS.has(snd):
 		sfx.stream = SOUNDS[snd]
 		sfx.play()
-
-
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name != "collected": return
-	queue_free()

@@ -5,6 +5,7 @@ var orbs = 0
 
 func _ready() -> void:
 	play_anim("empty")
+	set_visible(false)
 
 
 func _process(_delta) -> void:
@@ -13,7 +14,7 @@ func _process(_delta) -> void:
 	
 	#otherwise, do this:
 	orbs = Global.orbs
-	$Label.set_text(str(orbs))
+	$orbNumber.set_text(str(orbs))
 	match Global.orbs:
 		0: play_anim("empty")
 		1: play_anim("one")

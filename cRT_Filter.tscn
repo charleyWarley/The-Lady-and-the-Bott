@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/shader/viewportShader.tres" type="Shader" id=1]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/overlay = true
+shader_param/scanlines_opacity = 0.054
+shader_param/scanlines_width = 0.5
+shader_param/grille_opacity = 0.075
+shader_param/resolution = Vector2( 512, 448 )
+shader_param/pixelate = true
+shader_param/roll = true
+shader_param/roll_speed = 0.6
+shader_param/roll_size = 6.078
+shader_param/roll_variation = 3.9
+shader_param/distort_intensity = 0.01
+shader_param/noise_opacity = 0.289
+shader_param/noise_speed = 6.0
+shader_param/static_noise_intensity = 0.026
+shader_param/aberration = 0.025
+shader_param/brightness = 2.2
+shader_param/discolor = false
+shader_param/warp_amount = 0.08
+shader_param/clip_warp = false
+shader_param/vignette_intensity = 0.32
+shader_param/vignette_opacity = 0.855
+
+[node name="cRT_Filter" type="ColorRect"]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0

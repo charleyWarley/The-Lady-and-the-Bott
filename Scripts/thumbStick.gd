@@ -55,7 +55,7 @@ func _input(event):
 		handle_press(event, event.get_index())
 	 #if the current touch controller moves
 	elif (event is InputEventScreenDrag and event.get_index() == index) or (event is InputEventMouseMotion):
-		var dist = (event.get_position() - target_pos).clamped(background_radius)
+		var dist = (event.get_position() - target_pos).limit_length(background_radius) #limit_length() was previously clamped()
 		if wasPressed: curr_pos = start_pos + dist
 		else: curr_pos = start_pos
 		value = (dist / background_radius).reflect(Vector2(1,0))

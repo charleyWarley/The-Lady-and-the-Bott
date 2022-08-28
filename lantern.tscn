@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/lantern.gd" type="Script" id=1]
-[ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=2]
+[ext_resource path="res://sprites/spriteTiles.png" type="Texture" id=2]
 [ext_resource path="res://sprites/light.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=6]
@@ -9,8 +9,10 @@ extents = Vector2( 2, 4 )
 
 [sub_resource type="RectangleShape2D" id=7]
 
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 71.5, 66 )
+
 [node name="lantern" type="RigidBody2D"]
-position = Vector2( -696, -533 )
 continuous_cd = 1
 contacts_reported = 1
 contact_monitor = true
@@ -21,13 +23,14 @@ collision = NodePath("CollisionShape2D")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 6 )
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="collectArea" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="collectArea"]
 shape = SubResource( 7 )
 
 [node name="light" type="Light2D" parent="."]
 show_behind_parent = true
+scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 mode = 3
 range_height = 1.0
@@ -36,9 +39,23 @@ shadow_gradient_length = 2.0
 shadow_filter = 2
 shadow_filter_smooth = 5.3
 
-[node name="Sprite" type="Sprite" parent="light"]
+[node name="sfx" type="AudioStreamPlayer" parent="."]
+
+[node name="light2" type="Light2D" parent="."]
+texture = ExtResource( 3 )
+energy = 0.3
+
+[node name="lightArea" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="lightArea"]
+shape = SubResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 region_enabled = true
-region_rect = Rect2( 260, 53, 4, 9 )
+region_rect = Rect2( 152, 40, 16, 16 )
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="collectArea" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="lightArea" to="." method="_on_lightArea_body_entered"]
+[connection signal="body_exited" from="lightArea" to="." method="_on_lightArea_body_exited"]

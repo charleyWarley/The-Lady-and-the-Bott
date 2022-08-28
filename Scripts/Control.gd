@@ -1,139 +1,166 @@
 extends Control
+
+const SONGS = {
+	"menuSong": preload("res://audio/song1.wav"),
+	"gameSong": preload("res://audio/Ambience1.wav")
+}
+
 export(NodePath) onready var music = get_node(music) as AudioStreamPlayer
 export(NodePath) onready var single = get_node(single) as ViewportContainer
-export(NodePath) onready var view = get_node(view) as Viewport
+
 export(NodePath) onready var mainMenu = get_node(mainMenu) as Node2D
 export(NodePath) onready var pauseMenu = get_node(pauseMenu) as Node2D
-export(NodePath) onready var map = get_node(map) as Node2D
+export(NodePath) onready var pauseButtons = get_node(pauseButtons) as VBoxContainer
+export(NodePath) onready var loading = get_node(loading) as TextureRect
+export(NodePath) onready var crt = get_node(crt) as ColorRect
 
 export(PackedScene) onready var multi
-export(PackedScene) onready var level1
+export(PackedScene) onready var overWorld
+export(PackedScene) onready var levelOne
+export(PackedScene) onready var marioWorld
 
-onready var camera = view.get_node("camera")
-onready var orbCase = get_node("OrbCase")
-onready var jumpGauge = get_node("jumpGauge")
-onready var logo = view.get_node("logo")
+onready var view = single.get_node("view")
+onready var camera = view.get_node("camera") setget set_camera, get_camera
+export(NodePath) onready var HUD = get_node(HUD)
 
+var connected = false
 var lady
 var bott
+var world setget set_world
+
+var isMusicPlaying = false
+var canPause = false
 
 #restart the level when finished (for unfinished game only)
-func _on_level_exited(_body) -> void:
-	get_tree().reload_current_scene()
+func _on_level_exited(_body) -> void: var _exit = get_tree().reload_current_scene()
+
 
 #executed when the player clicks start game
-func _on_game_started(players) -> void:
-	music.play()
-	orbCase.set_visible(true)
-	jumpGauge.set_visible(true)
+func _on_game_started(_players) -> void:
+	canPause = true
+	set_song("gameSong")
+	Global.set_deferred("moveType", Global.moveTypes.TOP)
+	var elements = HUD.get_children()
+	for element in elements:
+		element.set_visible(true)
+	Global.players = ("single")
+	mainMenu.queue_free() #clear the title screen
+	set_deferred("world", overWorld)
+
 	
-	##if the game is on an android phone, show the virtual controller
-	if OS.get_name() == "Android": $virtualController.set_visible(true)
-	
-	#check for single player or multiplayer
-	match players:
-		#set up the single-player environment
-		"single":
-			Global.players = ("single")
-			
-			#clear the title screen
-			mainMenu.queue_free()
-			logo.queue_free()
-			
-			#load the first level
-			var level = level1.instance()
-			view.add_child(level)
-			level.get_node("levelExit").connect("body_exited", self, "_on_level_exited")
-			camera._set_current(true)
-			
-			#set the camera to follow the lady
-			lady = level.get_node("saviya")
-			camera.target = lady
-			
-			
-			#lady.connect("camera_shake", camera, "_on_camera_shake")
-			
-			#set the virtual controller to lady's controls(default)
-			set_controller(lady)
-		
-		#set up the multi-player environment
-		"multi":
-			Global.players = ("multi")
-			
-			#clear the title screen and default environment
-			single.queue_free()
-			
-			#load the new viewport container for the muntiplayer environment
-			var multiView = multi.instance()
-			add_child(multiView)
-			
-			#load the level
-			var level = get_node("multiView/HBoxContainer/view1/World")
-			
-			#set the lady as saviya
-			lady = level.get_node("saviya")
-			camera = multiView.camera1
-			
-			#the controller should be set here, maybe
-			
-	#connect the camera_shake signal from the lady node, run the _on_camera_shake function on the camera node
-	lady.connect("camera_shake", camera, "_on_camera_shake")
+func _on_world_changed(location):
+	loading.set_visible(true)
+	var timer := Timer.new()
+	add_child(timer)
+	timer.wait_time = 2
+	var _timer_connect = timer.connect("timeout", self, "clear_loading_screen")
+	timer.start()
+	var movement
+	match location:
+		"overWorld": 
+			location = overWorld
+			movement = Global.moveTypes.TOP
+		"levelOne": 
+			location = levelOne
+			movement = Global.moveTypes.SIDE
+		"marioWorld":
+			location = marioWorld
+			movement = Global.moveTypes.MARIO
+	print(location, movement)
+	set_deferred("world", location)
+	Global.set_deferred("moveType", movement)
 
 
 func _input(event) -> void:
-	#register a screen touch as ui_accept
-	if event is InputEventScreenTouch:
+	if event is InputEventScreenTouch: #register a screen touch as ui_accept
 		if event.pressed: Input.action_press("ui_accept")
 		else: Input.action_release("ui_accept")
-	
-	#otherwise, if the remaining actions aren't pause or help, ignore the rest
-	elif !event.is_action("pause") and !event.is_action("help"):
+	elif !event.is_action("pause") and !event.is_action("fullscreen") and !event.is_action("mute") and !event.is_action("crt"):
 		return
-	
-	#if pause or help are pressed
-	if event.pressed: 
-		#if the level is paused
+	if event.pressed:
+		if event.is_action("fullscreen"): 
+			OS.window_fullscreen = !OS.window_fullscreen
+			return
+		if event.is_action("crt"):
+			print("crt visibility changed")
+			set_crtVisibility()
+			return
+		elif event.is_action("mute"): 
+			mute()
+			return
 		if get_tree().is_paused():
-			#if the event pause was released, close the pause menu
-			if event.is_action("pause"): pauseMenu.move(Vector2(819, 1278))
-			#otherwise, close the map
-			else: map.move(Vector2(0, 1278))
-			#unpause the level
-			get_tree().set_pause(false)
-		
-		#if the level isn't paused
+			if event.is_action("pause"):
+				unpause()
+				return
 		else:
-			#if the pause event was pressed, open the pause menu
-			if event.is_action("pause"): pauseMenu.move(Vector2(819, 430))
-			#otherwise, open the map
-			else: map.move(Vector2.ZERO)
-			#pause the level
-			get_tree().set_pause(true)
+			if event.is_action("pause"): 
+				pause()
+				return
+				
+
 
 
 func _ready() -> void:
-	#hide the mouse
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-	
-	#connect the game_started event to the _on_game_started function
-	mainMenu.connect("game_started", self, "_on_game_started")
+	loading.set_visible(false)
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN) #hide the mouse
+	set_song("menuSong")
+	mainMenu.connect("game_started", self, "_on_game_started") #connect the game_started event to the _on_game_started function
+	pauseButtons.connect("musicButton_pressed", self, "mute")
+	pauseButtons.connect("crtButton_pressed", self, "set_crtVisibility")
 
 
-func _process(_delta) -> void:
-	#check for controller input change
-	if $virtualController/savControls.is_pressed():  set_controller(lady)
-	elif $virtualController/aliControls.is_pressed(): set_controller(bott)
+func pause() -> void:
+	if !canPause: return
+	pauseMenu.move(Vector2(126, 88))
+	get_tree().set_pause(true)
 
 
-func set_controller(character) -> void:
-	#make an array of the buttons
-	var buttons = [$virtualController/left,
-	$virtualController/right,
-	$virtualController/up,
-	$virtualController/down]
-	
-	#for each button in the array, change the action tag prefix
-	for button in buttons: 
-		match character:
-			lady: button.action = "sav_" + button.name
-			bott: button.action = "ali_" + button.name
+func unpause() -> void:
+	pauseMenu.move(Vector2(126, -128))
+	get_tree().set_pause(false)
+
+
+func mute() -> void:
+	isMusicPlaying = !isMusicPlaying
+	if !isMusicPlaying:
+		print("unmuted")
+		music.play()
+	else:
+		print("muted")
+		music.stop()
+
+
+func clear_loading_screen(): loading.set_visible(false)
+
+
+func set_crtVisibility():
+	if crt.visible == true: crt.set_visible(false)
+	else: crt.set_visible(true)
+
+
+func set_world(newLevel):
+	var level = newLevel.instance() #load the first level
+	if world != level: 
+		if world != null: world.queue_free()
+		world = level
+	view.add_child(level)
+	set_camera(level)
+
+
+func set_song(newSong):
+	music.stop()
+	if SONGS.has(newSong):
+		if !music.is_playing():
+			music.stream = SONGS[newSong]
+			music.play()
+
+
+func set_camera(level):
+	if level.name != "superMarioBros":
+		camera._set_current(true)
+		camera.set_zoom(Vector2(1,1))
+	lady = level.get_node("lady") #set the camera to follow the lady
+	camera.target = lady
+	if !connected: connected = lady.connect("world_changed", self, "_on_world_changed")
+
+func get_camera(): return camera

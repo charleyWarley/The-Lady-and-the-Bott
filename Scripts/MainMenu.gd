@@ -2,7 +2,12 @@ extends Node2D
 
 signal game_started(players)
 
-export(NodePath) onready var song1 = get_node(song1) as AudioStreamPlayer
+const SOUNDS = {
+	"switchUI": preload("res://audio/switchUISound.wav"),
+	"selectUI": preload("res://audio/selectUISound.wav"),
+	"cancelUI": preload("res://audio/cancelSound.mp3")
+	}
+
 export(NodePath) onready var main_buttons = get_node(main_buttons) as Node2D
 export(NodePath) onready var single = get_node(single) as Button
 export(NodePath) onready var multi = get_node(multi) as Button
@@ -14,45 +19,45 @@ export(NodePath) onready var de = get_node(de) as Button
 export(NodePath) onready var ja = get_node(ja) as Button
 export(NodePath) onready var ro = get_node(ro) as Button
 
+export(NodePath) onready var sfx = get_node(sfx)
+export(NodePath) onready var sfx2 = get_node(sfx2)
+
 var menu = "main"
-var isMusicPlaying = false
 
 
+func _ready():
+	set_menu(lang_buttons, main_buttons)
+	set_button(single, single)
 
-func _ready() -> void:
-	song1.play()
-	
 
-
-func _process(_delta) -> void:
-	if Input.is_action_just_pressed("mute"):
-		isMusicPlaying = !isMusicPlaying
-		mute()
-	
+func _process(_delta):
 	#check menu inputs
 	match menu:
 		"main": check_main_menu()
 		"langs": check_lang_menu()
-		
+
 
 func check_lang_menu():
 	if Input.is_action_just_released("ui_down"):
+		play_snd("switchUI")
 		if en.is_pressed():
-			switch_pressed(en, de)
+			set_button(en, de)
 		elif de.is_pressed():
-			switch_pressed(de, ja)
+			set_button(de, ja)
 		elif ja.is_pressed():
-			switch_pressed(ja, ro)
+			set_button(ja, ro)
 		else: en.set_pressed(true)
 	elif Input.is_action_just_released("ui_up"):
+		play_snd("switchUI")
 		if ro.is_pressed():
-			switch_pressed(ro, ja)
+			set_button(ro, ja)
 		elif ja.is_pressed():
-			switch_pressed(ja, de)
+			set_button(ja, de)
 		elif de.is_pressed():
-			switch_pressed(de, en)
+			set_button(de, en)
 		else: en.set_pressed(true)
 	elif Input.is_action_just_released("ui_accept"):
+		play_snd("selectUI")
 		if en.is_pressed():
 			en.set_pressed(false)
 			TranslationServer.set_locale("en")
@@ -67,23 +72,26 @@ func check_lang_menu():
 			TranslationServer.set_locale("ro")
 		else:
 			print("idk what to do ")
-		switch_menu(lang_buttons, main_buttons)
+		set_menu(lang_buttons, main_buttons)
 		menu = "main"
 		single.set_pressed(true)
-		
-			
+
+
 func check_main_menu():
 	if Input.is_action_just_released("ui_down"):
+		play_snd("switchUI")
 		if single.is_pressed():
-			switch_pressed(single, multi)
+			set_button(single, multi)
 		elif multi.is_pressed():
-			switch_pressed(multi, lang)
+			set_button(multi, lang)
 	elif Input.is_action_just_released("ui_up"):
+		play_snd("switchUI")
 		if lang.is_pressed():
-			switch_pressed(lang, multi)
+			set_button(lang, multi)
 		elif multi.is_pressed():
-			switch_pressed(multi, single)
+			set_button(multi, single)
 	elif Input.is_action_just_released("ui_accept"):
+		play_snd("selectUI")
 		if single.is_pressed():
 			emit_signal("game_started", "single")
 			print("single started")
@@ -94,25 +102,24 @@ func check_main_menu():
 			lang.set_pressed(false)
 			en.set_pressed(true)
 			menu = "langs"
-			switch_menu(main_buttons, lang_buttons)
+			set_menu(main_buttons, lang_buttons)
 
 
-#switch the button pressed
-func switch_pressed(old, new) -> void:
+func play_snd(snd) -> void:
+	if SOUNDS.has(snd):
+		if !sfx.is_playing():
+			sfx.stream = SOUNDS[snd]
+			sfx.play()
+		else:
+			sfx2.stream = SOUNDS[snd]
+			sfx2.play()
+
+
+func set_button(old, new) -> void:
 	old.set_pressed(false)
 	new.set_pressed(true)
 
 
-#switch out the menus
-func switch_menu(old, new) -> void:
-	old.move(Vector2(190, 1193))
-	new.move(Vector2(190, 780))
-
-
-func mute() -> void:
-	if !isMusicPlaying:
-		print("unmuted")
-		song1.play()
-	else:
-		print("muted")
-		song1.stop()
+func set_menu(old, new) -> void:
+	old.move(Vector2(62, 263))
+	new.move(Vector2(62, 145))

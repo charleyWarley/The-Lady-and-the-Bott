@@ -7,9 +7,13 @@
 extents = Vector2( 7, 8 )
 
 [node name="fakeWall" type="Node2D"]
-script = ExtResource( 2 )
 
 [node name="fakeWall" type="StaticBody2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="fakeWall"]
+position = Vector2( 0, 4.17233e-07 )
+scale = Vector2( 0.8, 0.8 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="fakeWall"]
 position = Vector2( 1, 0 )
@@ -19,3 +23,6 @@ shape = SubResource( 1 )
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 87, 192, 16, 16 )
+
+[connection signal="screen_entered" from="fakeWall/VisibilityNotifier2D" to="fakeWall" method="_on_VisibilityNotifier2D_screen_entered"]
+[connection signal="screen_exited" from="fakeWall/VisibilityNotifier2D" to="fakeWall" method="_on_VisibilityNotifier2D_screen_exited"]

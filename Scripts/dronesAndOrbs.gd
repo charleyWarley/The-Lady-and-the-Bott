@@ -13,5 +13,9 @@ func _on_Timer_timeout():
 	$Label.set_text("grab the drone \nto disable it")
 	canGrab = true
 
+
+func _ready():
+	$Label.set_visible(false)
+
 func _process(_delta):
-	if canGrab and Input.is_action_just_released("grab"): queue_free()
+	if canGrab and Input.is_action_just_released("use_ability"): queue_free()

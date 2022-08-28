@@ -1,18 +1,18 @@
 extends Area2D
 
+onready var anim_player = $AnimationPlayer
 var isPowered = true
 
 func _ready():
 	add_to_group("spikes")
-	$AnimationPlayer.play("on")
+	anim_player.play("on")
 
 func _on_Spikes_body_entered(body):
 	if !isPowered:
 		return
 	match body.name:
-		"saviya":
-			body.isDead = true
-		"alizea":
-			body.power += 1
+		"lady":
+			body.isDamaged = true
+		"bott":
 			isPowered = false
-			$AnimationPlayer.play("off")
+			anim_player.play("off")

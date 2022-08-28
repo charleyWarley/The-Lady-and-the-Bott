@@ -9,10 +9,10 @@ func _process(_delta):
 	if Input.is_action_just_released("sav_left"): isLeftPressed = true
 	elif Input.is_action_just_released("sav_right"): isRightPressed = true
 	if isLeftPressed and isRightPressed:
-		$Label.set_text("hold SHIFT to run")
+		$Label.set_text("hold NUMPAD-4 to run")
 		if Input.is_action_just_released("run") and !isRunPressed: isRunPressed = true
 		if isRunPressed:
-			$Label.set_text("use W to jump")
+			$Label.set_text("use NUMPAD-5 to jump")
 			if Input.is_action_just_released("sav_up"): isJumpPressed = true
 			if isJumpPressed: queue_free()
 

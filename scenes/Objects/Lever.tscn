@@ -91,7 +91,6 @@ tracks/1/keys = {
 }
 
 [node name="Lever" type="Area2D"]
-position = Vector2( -263.676, 392.58 )
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -120,3 +119,5 @@ autoplay = "start"
 anims/off = SubResource( 2 )
 anims/on = SubResource( 3 )
 anims/start = SubResource( 4 )
+
+[node name="sfx" type="AudioStreamPlayer2D" parent="."]

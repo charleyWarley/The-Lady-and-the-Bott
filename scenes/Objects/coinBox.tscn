@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/players/coinBox.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Objects/coin.tscn" type="PackedScene" id=2]
+[ext_resource path="res://sprites/NES - Super Mario Bros - World 1-1.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 8, 8 )
+
+[node name="coinBox" type="Area2D"]
+position = Vector2( 152, 40 )
+script = ExtResource( 1 )
+coin = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 9 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 256, 144, 16, 16 )
+
+[connection signal="body_entered" from="." to="." method="_on_coinBox_body_entered"]

@@ -39,8 +39,8 @@ var isEmpty := true
 var isGrounded := false
 
 var sparks : int = 0
-var power : int = 0
-var hit : int = 0
+var energy : int = 0
+var health : int = 0
 var jumps : int = 0
 var doubleJumps : int = 0
 
@@ -62,11 +62,17 @@ func _ready() -> void:
 	add_to_group("buddy")
 	play_anim("box1")
 
+func hit(power : int, rightForce: bool):
+	var force = 80
+	if rightForce == false: force = -force
+	apply_central_impulse(Vector2(force, 0))
+	health -= power
+	#play_snd("hit")
 
 func _process(_delta) -> void:
 	Global.jumps = doubleJumps
 	if jumps >= 100:
-		power -= 1
+		energy -= 1
 		jumps = 0
 		
 
@@ -103,16 +109,16 @@ func _physics_process(delta) -> void:
 
 
 func make_spark() -> void:
-	if power == 0: return
+	if energy == 0: return
 	var newSpark : Node2D = spark.instance()
 	get_parent().add_child(newSpark)
 	newSpark.position = position
 	newSpark.get_child(0).set_emitting(true)
 	sparks += 1
 	if sparks == 2: 
-		power -= 1
+		energy -= 1
 		sparks = 0
-	if power < 0: power = 0
+	if energy < 0: energy = 0
 
 
 func check_x(drag, delta) -> float:
@@ -125,7 +131,7 @@ func walk_snd():
 
 
 func jump() -> void:
-	power_check()
+	energy_check()
 	timeLeftGround = get_cur_time()
 	if !isEmpty:
 		if !canDoubleJump:
@@ -178,15 +184,15 @@ func flip() -> void:
 		isFlipped = !isFlipped
 
 
-func power_check() -> void:
-	if power == 0:
+func energy_check() -> void:
+	if energy == 0:
 		isEmpty = true
 		isFull = false
-	elif power > 0:
+	elif energy > 0:
 		isEmpty = false
-		if power < 20: isFull = false
-		elif power >= 20:
-			power = 20
+		if energy < 20: isFull = false
+		elif energy >= 20:
+			energy = 20
 			isFull = true
 
 
@@ -202,13 +208,9 @@ func play_anim(newAnimation) -> void:
 func anim_check(move) -> void:
 	if !isEmpty:
 		if !isMet:
-			if hit == 0: play_anim("box2")
-			elif hit == 1:
-				play_anim("box2_hit1") 
-				hit += 1
-			elif hit == 2: 
-				play_anim("box2_hit2")
-				hit += 1
+			if health == 2: play_anim("box2")
+			elif health == 1: play_anim("box2_hit1")
+			elif health <= 0:  play_anim("box2_hit2")
 		else:
 			if !isRevealed: return
 			elif isGrounded:
@@ -218,13 +220,13 @@ func anim_check(move) -> void:
 			elif velocity.y > 0: play_anim("fall")
 	else:
 		if !isMet:
-			if hit == 0: play_anim("box1")
-			elif hit == 1: 
+			if health == 0: play_anim("box1")
+			elif health == 1: 
 				play_anim("box1_hit1")
-				#hit += 1
-			elif hit == 2: 
+				#health += 1
+			elif health == 2: 
 				play_anim("box1_hit2")
-				#hit += 1
+				#health += 1
 		else:
 			if !isRevealed: return
 			elif isGrounded:
@@ -233,7 +235,7 @@ func anim_check(move) -> void:
 			elif velocity.y < 0: play_anim("jump")
 			elif velocity.y > 0: play_anim("fall")
 
-	if hit >= 3 and !isMet:
+	if health >= 3 and !isMet:
 		isMet = true
 		play_anim("reveal")
 

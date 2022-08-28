@@ -1,0 +1,211 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://scenes/Objects/hitSpark.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/UI/notification.tscn" type="PackedScene" id=2]
+[ext_resource path="res://audio/walksquoosh.wav" type="AudioStream" id=3]
+[ext_resource path="res://Scripts/lady.gd" type="Script" id=4]
+[ext_resource path="res://animations/side_fall.tres" type="Animation" id=5]
+[ext_resource path="res://animations/side_walk.tres" type="Animation" id=6]
+[ext_resource path="res://animations/side_grab.tres" type="Animation" id=7]
+[ext_resource path="res://animations/side_idle.tres" type="Animation" id=8]
+[ext_resource path="res://scenes/players/saviyaCollisionShape.tres" type="Shape2D" id=9]
+[ext_resource path="res://animations/side_jump.tres" type="Animation" id=10]
+[ext_resource path="res://sprites/spriteTiles2.png" type="Texture" id=11]
+[ext_resource path="res://animations/side_hit.tres" type="Animation" id=12]
+[ext_resource path="res://animations/top_idle_down.tres" type="Animation" id=13]
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 6, 1.5 )
+
+[sub_resource type="Animation" id=9]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("spriteGroup/upperSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 22 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("spriteGroup/upperSprite:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, -8 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("spriteGroup/lowerSprite:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "side_damage"
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.3, 0.6, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 20, 0, 20, 0, 20, 1 ]
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "side_death"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("spriteGroup/lowerSprite:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -2 ), Vector2( 0, 4 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "side_duck"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 11 ]
+}
+
+[node name="lady" type="KinematicBody2D"]
+collision_layer = 13
+collision_mask = 13
+script = ExtResource( 4 )
+spriteGroup = NodePath("spriteGroup")
+topSprite = NodePath("spriteGroup/upperSprite")
+sfx = NodePath("sfx/sfx")
+sfx2 = NodePath("sfx/sfx2")
+animPlayer = NodePath("AnimationPlayer")
+ray = NodePath("RayCast2D")
+pos2D = NodePath("Position2D")
+hitSpark = ExtResource( 1 )
+notification = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.262064, 2.01119 )
+shape = ExtResource( 9 )
+
+[node name="groundArea" type="Area2D" parent="."]
+
+[node name="groundShape" type="CollisionShape2D" parent="groundArea"]
+position = Vector2( -1, 6.5 )
+shape = SubResource( 10 )
+one_way_collision = true
+
+[node name="spriteGroup" type="Node2D" parent="."]
+
+[node name="lowerSprite" type="Sprite" parent="spriteGroup"]
+texture = ExtResource( 11 )
+hframes = 12
+vframes = 2
+frame = 1
+region_enabled = true
+region_rect = Rect2( 0, 0, 192, 32 )
+
+[node name="upperSprite" type="Sprite" parent="spriteGroup"]
+visible = false
+position = Vector2( 1, -8 )
+texture = ExtResource( 11 )
+hframes = 12
+vframes = 2
+frame = 22
+region_enabled = true
+region_rect = Rect2( 0, 0, 192, 32 )
+
+[node name="sfx" type="Node2D" parent="."]
+
+[node name="sfx" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource( 3 )
+
+[node name="sfx2" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource( 3 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 0, 4 )
+enabled = true
+cast_to = Vector2( 10, 0 )
+collide_with_areas = true
+
+[node name="Position2D" type="Position2D" parent="."]
+show_behind_parent = true
+position = Vector2( 9, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "top_idle_down"
+anims/RESET = SubResource( 9 )
+anims/side_damage = SubResource( 12 )
+anims/side_death = SubResource( 13 )
+anims/side_duck = SubResource( 11 )
+anims/side_fall = ExtResource( 5 )
+anims/side_grab = ExtResource( 7 )
+anims/side_hit = ExtResource( 12 )
+anims/side_idle = ExtResource( 8 )
+anims/side_jump = ExtResource( 10 )
+anims/side_walk = ExtResource( 6 )
+anims/top_idle_down = ExtResource( 13 )
+
+[connection signal="area_entered" from="groundArea" to="." method="_on_groundArea_area_entered"]
+[connection signal="area_exited" from="groundArea" to="." method="_on_groundArea_area_exited"]
+[connection signal="body_entered" from="groundArea" to="." method="_on_groundArea_body_entered"]
+[connection signal="body_exited" from="groundArea" to="." method="_on_groundArea_body_exited"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

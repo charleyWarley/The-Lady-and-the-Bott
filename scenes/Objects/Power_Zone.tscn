@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/Power_Zone.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Objects/Lever.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/Objects/star.tscn" type="PackedScene" id=3]
-[ext_resource path="res://fonts/tutorialTheme.tres" type="Theme" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16.3239, 10 )
@@ -48,20 +47,22 @@ margin_right = 16.0
 margin_bottom = 10.0
 color = Color( 0, 0.929412, 1, 0.25098 )
 
-[node name="Label" type="Label" parent="sensor"]
-modulate = Color( 1, 1, 1, 0.439216 )
-show_behind_parent = true
-margin_left = -55.0
-margin_top = -34.0
-margin_right = 97.0
-margin_bottom = 1.0
-theme = ExtResource( 4 )
-text = "press DOWN to forge
-an energy core"
-align = 1
-
 [node name="Lever" parent="." instance=ExtResource( 2 )]
 position = Vector2( -17, 4 )
 
+[node name="Sprite" parent="Lever/CollisionShape2D" index="0"]
+frame = 3
+
+[node name="Sprite2" parent="Lever" index="1"]
+frame = 0
+
 [node name="starPosition" type="Position2D" parent="."]
-position = Vector2( -25, -4 )
+position = Vector2( -2, -4 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+
+[connection signal="body_entered" from="Lever" to="Lever" method="_on_Lever_body_entered"]
+[connection signal="body_exited" from="Lever" to="Lever" method="_on_Lever_body_exited"]
+[connection signal="animation_finished" from="Lever/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+
+[editable path="Lever"]

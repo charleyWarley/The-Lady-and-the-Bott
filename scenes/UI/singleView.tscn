@@ -10,7 +10,7 @@ margin_top = -540.0
 margin_right = 960.0
 margin_bottom = 540.0
 
-[node name="Viewport" type="Viewport" parent="."]
+[node name="view" type="Viewport" parent="."]
 size = Vector2( 1920, 1080 )
 handle_input_locally = false
 render_target_update_mode = 3

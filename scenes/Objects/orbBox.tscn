@@ -19,6 +19,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _physics_process(_delta):
 	if isBroken and !wasBroken: 
+		wasBroken = true
 		break_box()
 	if hit == 1: play_anim(\"hit1\")
 	elif hit >= 2  and hit != 100: 
@@ -32,16 +33,16 @@ func set_broken(_change):
 
 
 func break_box():
-	wasBroken = true
 	set_mode(RigidBody2D.MODE_STATIC)
 	var newOrb = orb.instance()
 	add_child(newOrb)
 	newOrb.position = Vector2.ZERO
 	set_gravity_scale(0.0)
-	if !$boxCollision.is_disabled():
-		outline.queue_free()
-		$Sprite.set_visible(false)
-		$boxCollision.set_disabled(true)
+	if $boxCollision:
+		if !$boxCollision.is_disabled():
+			outline.queue_free()
+			$Sprite.set_visible(false)
+			$boxCollision.set_disabled(true)
 "
 
 [sub_resource type="RectangleShape2D" id=1]
