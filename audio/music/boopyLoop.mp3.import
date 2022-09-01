@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/boopyLoop.mp3-5801d1159278f218c045caf9031efc65.mp3str"
+
+[deps]
+
+source_file="res://audio/music/boopyLoop.mp3"
+dest_files=[ "res://.import/boopyLoop.mp3-5801d1159278f218c045caf9031efc65.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,8 +1,8 @@
 extends Control
 
 const SONGS = {
-	"menuSong": preload("res://audio/song1.wav"),
-	"gameSong": preload("res://audio/Ambience1.wav")
+	"menuSong": preload("res://audio/music/song1.wav"),
+	"gameSong": preload("res://audio/music/ambience/Ambience1.wav")
 }
 
 export(NodePath) onready var music = get_node(music) as AudioStreamPlayer
@@ -30,6 +30,29 @@ var world setget set_world
 
 var isMusicPlaying = false
 var canPause = false
+var firstWorld setget set_firstWorld
+
+
+func set_firstWorld(location):
+	var movement
+	match location:
+		"overWorld": 
+			location = overWorld
+			movement = Global.moveTypes.TOP
+			camera.maxLimit = Vector2(1900, 700)
+			camera.minLimit = Vector2(-150, -150)
+		"levelOne": 
+			location = levelOne
+			movement = Global.moveTypes.SIDE
+			camera.minLimit = Vector2(0, 0)
+			camera.maxLimit = Vector2(850, 950)
+		"marioWorld":
+			location = marioWorld
+			movement = Global.moveTypes.MARIO
+			camera.maxLimit = Vector2(3200, 150)
+			camera.minLimit = Vector2(-150, -500)
+	set_deferred("world", location)
+	Global.set_deferred("moveType", movement)
 
 #restart the level when finished (for unfinished game only)
 func _on_level_exited(_body) -> void: var _exit = get_tree().reload_current_scene()
@@ -45,28 +68,28 @@ func _on_game_started(_players) -> void:
 		element.set_visible(true)
 	Global.players = ("single")
 	mainMenu.queue_free() #clear the title screen
-	set_deferred("world", overWorld)
+	set_deferred("firstWorld", "overWorld")
 
 	
 func _on_world_changed(location):
-	loading.set_visible(true)
-	var timer := Timer.new()
-	add_child(timer)
-	timer.wait_time = 2
-	var _timer_connect = timer.connect("timeout", self, "clear_loading_screen")
-	timer.start()
+	camera.loading.set_visible(true)
 	var movement
 	match location:
 		"overWorld": 
 			location = overWorld
 			movement = Global.moveTypes.TOP
+			camera.maxLimit = Vector2(1900, 700)
+			camera.minLimit = Vector2(-150, -150)
 		"levelOne": 
 			location = levelOne
 			movement = Global.moveTypes.SIDE
+			camera.maxLimit = Vector2(-270, 75)
+			camera.minLimit = Vector2(-915, -610)
 		"marioWorld":
 			location = marioWorld
 			movement = Global.moveTypes.MARIO
-	print(location, movement)
+			camera.maxLimit = Vector2(3200, 150)
+			camera.minLimit = Vector2(-150, -500)
 	set_deferred("world", location)
 	Global.set_deferred("moveType", movement)
 
@@ -99,6 +122,8 @@ func _input(event) -> void:
 				
 
 
+func reset_game():
+	get_tree().reload_current_scene()
 
 func _ready() -> void:
 	loading.set_visible(false)
@@ -107,6 +132,7 @@ func _ready() -> void:
 	mainMenu.connect("game_started", self, "_on_game_started") #connect the game_started event to the _on_game_started function
 	pauseButtons.connect("musicButton_pressed", self, "mute")
 	pauseButtons.connect("crtButton_pressed", self, "set_crtVisibility")
+	pauseButtons.connect("quitButton_pressed", self, "reset_game")
 
 
 func pause() -> void:

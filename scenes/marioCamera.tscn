@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://marioCamera.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 12.4145, 159.026 )
+
+[node name="marioCamera" type="Camera2D"]
+position = Vector2( 17, 8 )
+smoothing_enabled = true
+script = ExtResource( 1 )
+target = NodePath("../lady")
+
+[node name="barrier" type="StaticBody2D" parent="."]
+position = Vector2( -159, 73 )
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="barrier"]
+position = Vector2( 23, -76 )
+shape = SubResource( 10 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="barrier"]
+position = Vector2( 155.964, -205.585 )
+rotation = 1.56304
+shape = SubResource( 10 )

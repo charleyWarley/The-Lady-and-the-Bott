@@ -1,11 +1,11 @@
 [gd_scene load_steps=25 format=2]
 
-[ext_resource path="res://sprites/industrial.v2.png" type="Texture" id=1]
-[ext_resource path="res://audio/walksquoosh.wav" type="AudioStream" id=2]
+[ext_resource path="res://sprites/Tile Sets/industrial.v2.png" type="Texture" id=1]
+[ext_resource path="res://audio/sfx/walksquoosh.wav" type="AudioStream" id=2]
 [ext_resource path="res://Scripts/alizea.gd" type="Script" id=3]
 [ext_resource path="res://scenes/Objects/alizeaCollision.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/Objects/alizeaParticles.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/Levels/hitParticle.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/hitParticle.tscn" type="PackedScene" id=6]
 [ext_resource path="res://sprites/light.png" type="Texture" id=7]
 
 [sub_resource type="PhysicsMaterial" id=30]

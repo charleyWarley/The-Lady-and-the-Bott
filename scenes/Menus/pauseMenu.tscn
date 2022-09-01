@@ -1,0 +1,81 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://fonts/uiTheme.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/menus.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/pauseButtons.gd" type="Script" id=3]
+
+[node name="pauseMenu" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 2 )
+
+[node name="tween" type="Tween" parent="."]
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 4.50002, 28 )
+scale = Vector2( 7.55, 6.8 )
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -49.0
+margin_top = -30.0
+margin_right = 50.0
+margin_bottom = -11.0
+theme = ExtResource( 1 )
+text = "game paused"
+
+[node name="ColorRect2" type="ColorRect" parent="Label"]
+show_behind_parent = true
+margin_left = -25.0
+margin_top = -16.0
+margin_right = 128.6
+margin_bottom = 128.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="ColorRect" type="ColorRect" parent="Label/ColorRect2"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 140.0
+margin_bottom = 132.0
+color = Color( 0.188235, 0.270588, 0.337255, 1 )
+
+[node name="pauseButtons" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -48.0
+margin_top = -2.0
+margin_right = 54.0
+margin_bottom = 81.0
+script = ExtResource( 3 )
+
+[node name="musicButton" type="Button" parent="pauseButtons"]
+margin_right = 102.0
+margin_bottom = 25.0
+focus_neighbour_bottom = NodePath("../crtButton")
+theme = ExtResource( 1 )
+toggle_mode = true
+text = "music"
+flat = true
+
+[node name="crtButton" type="Button" parent="pauseButtons"]
+margin_top = 29.0
+margin_right = 102.0
+margin_bottom = 54.0
+focus_neighbour_top = NodePath("../musicButton")
+theme = ExtResource( 1 )
+toggle_mode = true
+text = "CRT filter"
+flat = true
+
+[node name="quitButton" type="Button" parent="pauseButtons"]
+margin_top = 58.0
+margin_right = 102.0
+margin_bottom = 83.0
+focus_neighbour_top = NodePath("../musicButton")
+theme = ExtResource( 1 )
+toggle_mode = true
+text = "quit"
+flat = true
+
+[connection signal="screen_entered" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_entered"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

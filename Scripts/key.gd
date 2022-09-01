@@ -13,3 +13,5 @@ func _on_Area2D_body_entered(body):
 func _on_AnimationPlayer_animation_finished(anim_name): 
 	if anim_name == "open": lady.emit_signal("world_changed", location)
 
+func _ready():
+	$Label.set_text(location)

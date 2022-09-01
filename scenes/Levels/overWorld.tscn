@@ -4,7 +4,7 @@
 [ext_resource path="res://scenes/players/lady.tscn" type="PackedScene" id=2]
 [ext_resource path="res://sprites/Tile Sets/Pixel Art Top Down - Basic/Texture/TX Props.png" type="Texture" id=3]
 [ext_resource path="res://scenes/Objects/key.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/Levels/overWorld.gd" type="Script" id=6]
+[ext_resource path="res://Scripts/overWorld.gd" type="Script" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
@@ -310,7 +310,7 @@ points = PoolVector2Array( 32, 96, 0, 96, 0, 64, 32, 64 )
 15/shapes = [  ]
 15/z_index = 0
 
-[node name="overWorld" type="Node2D"]
+[node name="overWorld" type="Node"]
 script = ExtResource( 6 )
 
 [node name="backgroundTiles" parent="." instance=ExtResource( 1 )]
@@ -325,7 +325,11 @@ scale = Vector2( 106.55, 45.6 )
 [node name="lady" parent="." instance=ExtResource( 2 )]
 
 [node name="key" parent="." instance=ExtResource( 4 )]
-position = Vector2( 174, 313 )
+position = Vector2( 24, 5 )
+location = "marioWorld"
+
+[node name="key2" parent="." instance=ExtResource( 4 )]
+position = Vector2( -32, 4 )
 
 [node name="foregroundTiles" parent="." instance=ExtResource( 1 )]
 

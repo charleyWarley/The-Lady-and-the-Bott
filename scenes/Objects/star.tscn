@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://sprites/spriteTiles2.png" type="Texture" id=1]
+[ext_resource path="res://sprites/Tile Sets/spriteTiles2.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/star.gd" type="Script" id=2]
 [ext_resource path="res://animations/star_idle.tres" type="Animation" id=3]
 [ext_resource path="res://animations/star_collected.tres" type="Animation" id=4]

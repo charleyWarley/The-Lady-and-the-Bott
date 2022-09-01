@@ -13,10 +13,10 @@ enum speeds {
 }
 
 const SOUNDS = {
-	"walk": preload("res://audio/walksound.wav"),
-	"jump0": preload("res://audio/jump0.wav"),
-	"jump1": preload("res://audio/jump1.wav"),
-	"jump2": preload("res://audio/jump2.wav")
+	"walk": preload("res://audio/sfx/walksound.wav"),
+	"jump0": preload("res://audio/sfx/jump0.wav"),
+	"jump1": preload("res://audio/sfx/jump1.wav"),
+	"jump2": preload("res://audio/sfx/jump2.wav")
 }
 
 const JUMP_POWER_BOX : int = -80

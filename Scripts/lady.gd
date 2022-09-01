@@ -5,11 +5,12 @@ signal damage_taken(damage, direction)
 signal world_changed
 
 const SOUNDS = {
-	"jump": preload("res://audio/jumpEffort.wav"),
-	"walk": preload("res://audio/walksquoosh.wav"),
-	"grunt": preload("res://audio/grunt.mp3"),
-	"grunt2": preload("res://audio/grunt2.mp3"),
-	"grunt3": preload("res://audio/hitGrunt.wav"),
+	"jump": preload("res://audio/sfx/jumpEffort.wav"),
+	"walk": preload("res://audio/sfx/walksquoosh.wav"),
+	"grunt": preload("res://audio/voice/grunt.mp3"),
+	"grunt2": preload("res://audio/voice/grunt2.mp3"),
+	"grunt3": preload("res://audio/voice/hitGrunt.wav"),
+	"damageTaken": preload("res://audio/voice/damageTaken.wav")
 }
 
 const JUMP_BUFFER : float = 0.08
@@ -20,7 +21,7 @@ const GRAV : int = -10
 #the cast_to distance of the ray
 const reachVector := Vector2(100, 0)
 const hitVector := Vector2(26, 0)
-const closeVector := Vector2(10, 0)
+const closeVector := Vector2(12, 0)
 
 enum JUMP_POWERS {
 	SIDE = -210
@@ -66,6 +67,7 @@ var isDying := false
 var isFalling := false
 var isAirborne := false
 var isGrounded := false
+var isRunning := false
 var alreadyFlipped := false
 var lastCollider
 
@@ -80,23 +82,26 @@ export(PackedScene) onready var hitSpark
 export(PackedScene) onready var notification
 onready var collisionShape = $CollisionShape2D
 
-func _on_groundArea_area_entered(_area) -> void: isGrounded = true
-func _on_groundArea_area_exited(_area) -> void: isGrounded = false
-func _on_groundArea_body_entered(_body) -> void: isGrounded = true
-func _on_groundArea_body_exited(_body) -> void: isGrounded = false
+#func _on_groundArea_area_entered(_area) -> void: isGrounded = true
+#func _on_groundArea_area_exited(_area) -> void: isGrounded = false
+#func _on_groundArea_body_entered(_body) -> void: isGrounded = true
+#func _on_groundArea_body_exited(_body) -> void: isGrounded = false
 
 
 func _on_AnimationPlayer_animation_finished(animName) -> void:
 	if animName != "side_damage": return
-	isInvinsible = false
-	print("invinsibility over")
-
+	match animName:
+		"side_damage":
+			isInvinsible = false
+			print("invinsibility over")
+		
 
 func _on_damage_taken(damage: int, dir: Vector2) -> void:
 	if isInvinsible: return
 	isInvinsible = true
 	if Global.orbs <= 0: 
 		isDying = true
+		play_anim("side_death", "damageTaken")
 		print("dead")
 		emit_signal("camera_shake", 12)
 		return
@@ -106,14 +111,15 @@ func _on_damage_taken(damage: int, dir: Vector2) -> void:
 		print("lady took ", damage, " damage from ", dir)
 		print("health is now ", health)
 		print("invinsibility started")
-		play_anim("side_damage", "grunt")
-	bounceForce = dir * 250
+		play_anim("side_damage", "damageTaken")
+	bounceForce.x = -dir.x * 200
+	bounceForce.y = -100
 	
 
 
 func _ready() -> void:
 	var _damage_signal = connect("damage_taken", self, "_on_damage_taken")
-
+	set_visible(false)
 
 func _process(_delta) -> void:
 	health = Global.orbs
@@ -153,10 +159,12 @@ func set_velocity(delta) -> void:
 	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
 	velocity = move_and_slide(velocity + bounceForce, Vector2.UP, false, 4, PI/4, false)
 	clear_bounceForce()
-	
+
+
 func clear_bounceForce():
 	bounceForce = Vector2.ZERO
-	
+
+
 func check_sprite() -> void:
 	pass
 	
@@ -177,7 +185,15 @@ func check_side_anim() -> void:
 	if wasGrounded:
 		if !Abilities.isHitting and !Abilities.isGrabbing:
 			if direction == Vector2(): play_anim("side_idle", "")
-			else: play_anim("side_walk", "walk")
+			else: 
+				if speed == speeds.WALK: 
+					play_anim("side_walk", "walk")
+					isRunning = false
+				elif speed == speeds.RUN: 
+					if !isRunning: animPlayer.get_animation("side_run").track_set_key_value(1, 0, 40)
+					isRunning = true
+					play_anim("side_run", "walk")
+					animPlayer.get_animation("side_run").track_set_key_value(1, 0, 15)
 	elif velocity.y < 0: play_anim("side_jump", "jump")
 	elif velocity.y > 0: play_anim("side_fall", "")
 
@@ -189,25 +205,36 @@ func check_top_anim() -> void:
 func check_actions() -> void:
 	if Input.is_action_pressed("run") and isGrounded: speed = speeds.RUN
 	elif Input.is_action_just_released("run"): speed = speeds.WALK
-	if Input.is_action_just_pressed("hit"):
-		Abilities.isHitting = true
-		hit()
-	elif Input.is_action_pressed("use_ability"):
-		match Abilities.ability: 
-			Abilities.abilities.NONE: grab()
-			Abilities.abilities.REACH: grab()
-			Abilities.abilities.HANG: pass
-	elif Input.is_action_just_pressed("change_ability"):
-		Abilities.change_ability()
+	if Input.is_action_just_pressed("hit"): hit()
+	#elif Input.is_action_pressed("use_ability"): use_ability()
+	elif Input.is_action_pressed("interact"): grab()
+	elif Input.is_action_just_pressed("change_ability"): Abilities.change_ability()
 	
 	if Input.is_action_pressed("sav_down"):  if Global.moveType == Global.moveTypes.SIDE or Global.moveType == Global.moveTypes.MARIO: play_anim("side_duck", "")
 	
-	if Input.is_action_just_released("use_ability"):
-		match Abilities.ability:
-			Abilities.abilities.NONE: ungrab()
-			Abilities.abilities.REACH: ungrab()
-			Abilities.abilities.HANG: unhang()
-	elif Input.is_action_just_released("hit"): Abilities.isHitting = false
+	#if Input.is_action_just_released("use_ability"): deactivate_ability()
+	if Input.is_action_just_released("hit"): Abilities.isHitting = false
+	elif Input.is_action_just_released("interact"): ungrab()
+
+func use_ability():
+	match Abilities.ability:
+		Abilities.abilities.NONE: 
+			print("no ability")
+			return
+		Abilities.abilities.REACH: pass
+		Abilities.abilities.HANG: pass
+		Abilities.abilities.STOMP: pass
+	print("ability activated")
+
+
+func deactivate_ability():
+	match Abilities.ability:
+		Abilities.abilities.NONE: pass
+		Abilities.abilities.REACH: pass
+		Abilities.abilities.HANG: unhang()
+		Abilities.abilities.STOMP: pass
+	print("ability deactivated")
+
 
 func ungrab() -> void:
 	Abilities.isGrabbing = false
@@ -227,6 +254,7 @@ func jump() -> void:
 		Global.moveTypes.MARIO: jumpPower = JUMP_POWERS.MARIO
 		Global.moveTypes.TOP: jumpPower = JUMP_POWERS.TOP
 	velocity.y = jumpPower
+
 
 #flip everything when the character turns left or right
 func check_flip() -> void:
@@ -292,27 +320,24 @@ func check_collisions() -> void:
 				if Input.is_action_pressed("use_ability") and Abilities.ability == Abilities.abilities.HANG: Abilities.isHanging = true
 				elif Input.is_action_just_released("use_ability"): Abilities.isHanging = false
 		if collision.normal.y == 1:
-			if collider.is_in_group("boxes"): 
-				collider.apply_central_impulse(Vector2(randi()%10, 0))
-				print("there's a box on your head")
+			print("you hit your head")
+			if collider.is_in_group("breakable"):
+				Global.orbs += 1
+				collider.destroy()
+			
 		elif collision.normal.y == -1: 
 			if isAirborne: isAirborne = false
 			if isFalling:
+				if collider.is_in_group("enemies"): 
+					print(collider.name, " attacked")
+					bounceForce.y = -120
+					collider.take_damage()
 				play_snd("walk")
 				isFalling = false
 				if Input.is_action_pressed("use_ability") and Abilities.canStomp: if collider.is_in_group("breakable"): collider.queue_free()
-				var timeCheck = get_cur_time() - fallTime
-				if timeCheck > 0.8:
-					if timeCheck > 0.85 and collider.is_in_group("boxes"):
-						if collider.name.find("orb") == -1:
-							if !collider.is_in_group("buddy"): collider.queue_free()
-						else:
-							if !collider.isBroken:
-								collider.set_broken(true)
-								collider.get_node("boxCollision").queue_free()
-					if timeCheck > 10: timeCheck = 10
-					emit_signal("camera_shake", pow(2, timeCheck))
-		if collider.is_in_group("boxes") and !collider.is_in_group("buddy"):
+		
+		
+		if collider.is_in_group("boxes"):
 			Abilities.isGrabbing = false
 			collider.apply_central_impulse(-collision.normal * pushForce)
 
@@ -340,6 +365,7 @@ func spark(isMoving) -> void:
 
 
 func hit() -> void:
+	Abilities.isHitting = true
 	match Global.moveType:
 		Global.moveTypes.SIDE:
 			if animPlayer.current_animation != "side_hit": 
@@ -371,6 +397,7 @@ func hit() -> void:
 
 
 func grab() -> void:
+	print("grabbing")
 	speed = speeds.SLOW
 	if !Abilities.isGrabbing:
 		if Abilities.canReach: spark(true)
@@ -453,3 +480,9 @@ func check_y() -> float:
 func get_cur_time() -> float: return OS.get_ticks_msec() / 1000.0
 
   
+func _on_VisibilityNotifier2D_viewport_entered(_viewport):
+	set_visible(true)
+
+
+func _on_VisibilityNotifier2D_viewport_exited(_viewport):
+	set_visible(false)

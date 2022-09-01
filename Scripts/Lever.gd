@@ -8,7 +8,7 @@ var isPoweredOn = false
 var canInteract = false
 
 const SOUNDS = {
-	"flipped": preload("res://audio/hitObject.wav")
+	"flipped": preload("res://audio/sfx/hitObject.wav")
 }
 
 func _on_Lever_body_entered(body): 

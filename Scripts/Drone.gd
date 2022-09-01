@@ -23,7 +23,7 @@ var isRightFree = false
 var isGrabbed = false
 var direction = Vector2(-1, 0)
 var isAlerted = false
-var speed = 0.5
+var speed = 5
 
 func _on_Timer_timeout(): canDie = false
 func _on_VisibilityNotifier2D_screen_entered(): self.set_visible(true)
@@ -42,21 +42,19 @@ func _process(_delta):
 	play_anim("idle")
 	isLeftFree = !check_ray(leftRay)
 	isRightFree = !check_ray(rightRay)
-	if isLeftFree and !isRightFree: isFlipped = true
-	if isRightFree and !isLeftFree: isFlipped = false
 	check_flip()
 
 
 func _physics_process(_delta):
 	if isDead or isGrabbed or canDie: return
-	
-	if !target:
-		if isFlipped: direction.x = -1
-		else: direction.x = 1
-	else:
-		direction.x = -abs(position.direction_to(target.position).x)
-	position.x += speed * direction.x
-	
+	if !isLeftFree: direction.x = 1
+	elif !isRightFree: direction.x = -1
+	else: direction.x = 0
+	var velocity : Vector2
+	velocity.x += speed * direction.x
+	position += velocity
+
+
 func hit(power: int, _rightForce: bool):
 	health -= power
 	if health <= 0: queue_free()
@@ -94,9 +92,10 @@ func _on_LOS_broken():
 	
 func check_flip():
 	if Abilities.isGrabbing: return
-	sprite.flip_h = !sprite.flip_h
-	
-
+	if direction.x == 1: 
+		if !isRightFree: sprite.flip_h = !sprite.flip_h
+	if direction.x == -1:
+		if !isLeftFree: sprite.flip_h = !sprite.flip_h
 func play_anim(anim):
 	if anim_player.current_animation == anim: return
 	anim_player.play(anim)

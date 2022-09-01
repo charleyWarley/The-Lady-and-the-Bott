@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/jumpGuage.gd" type="Script" id=1]
-[ext_resource path="res://sprites/spriteTiles2.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Tile Sets/spriteTiles2.png" type="Texture" id=2]
 
 [sub_resource type="Animation" id=9]
 length = 0.001

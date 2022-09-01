@@ -2,7 +2,7 @@ extends Breakable
 class_name Crate
 
 const SOUNDS = {
-	"hit": preload("res://audio/bonk.wav")
+	"hit": preload("res://audio/sfx/bonk.wav")
 }
 
 var health = 3

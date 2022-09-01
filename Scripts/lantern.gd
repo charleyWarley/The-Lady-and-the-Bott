@@ -1,7 +1,7 @@
 extends RigidBody2D
 
 const SOUNDS = {
-	"pickup": preload("res://audio/hitObject.wav")
+	"pickup": preload("res://audio/sfx/hitObject.wav")
 }
 
 
@@ -40,13 +40,3 @@ func set_grabbed(body):
 	continuous_cd = RigidBody2D.CCD_MODE_DISABLED
 	rotation = 0
 	position = get_parent().position
-
-
-func _on_lightArea_body_entered(body):
-	if body.is_in_group("enemies"): 
-		body._on_enemy_alerted(get_parent())
-
-
-func _on_lightArea_body_exited(body):
-	if body.is_in_group("enemies"): 
-		body._on_LOS_broken() #line of sight

@@ -4,7 +4,7 @@ extends Area2D
 
 const SOUNDS = {
 	"break":
-preload("res://audio/break.wav")
+preload("res://audio/sfx/break.wav")
 }
 
 

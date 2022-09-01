@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Ambience1.wav-a2137f3f11b8dd15e45bfa799ff0c32f.sample"
+
+[deps]
+
+source_file="res://audio/music/ambience/Ambience1.wav"
+dest_files=[ "res://.import/Ambience1.wav-a2137f3f11b8dd15e45bfa799ff0c32f.sample" ]
+
+[params]
+
+force/8_bit=true
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

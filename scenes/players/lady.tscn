@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/Objects/hitSpark.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/UI/notification.tscn" type="PackedScene" id=2]
-[ext_resource path="res://audio/walksquoosh.wav" type="AudioStream" id=3]
+[ext_resource path="res://audio/sfx/walksquoosh.wav" type="AudioStream" id=3]
 [ext_resource path="res://Scripts/lady.gd" type="Script" id=4]
 [ext_resource path="res://animations/side_fall.tres" type="Animation" id=5]
 [ext_resource path="res://animations/side_walk.tres" type="Animation" id=6]
@@ -10,12 +10,9 @@
 [ext_resource path="res://animations/side_idle.tres" type="Animation" id=8]
 [ext_resource path="res://scenes/players/saviyaCollisionShape.tres" type="Shape2D" id=9]
 [ext_resource path="res://animations/side_jump.tres" type="Animation" id=10]
-[ext_resource path="res://sprites/spriteTiles2.png" type="Texture" id=11]
+[ext_resource path="res://sprites/Tile Sets/spriteTiles2.png" type="Texture" id=11]
 [ext_resource path="res://animations/side_hit.tres" type="Animation" id=12]
 [ext_resource path="res://animations/top_idle_down.tres" type="Animation" id=13]
-
-[sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 6, 1.5 )
 
 [sub_resource type="Animation" id=9]
 length = 0.001
@@ -72,15 +69,27 @@ tracks/3/keys = {
 resource_name = "side_damage"
 tracks/0/type = "value"
 tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.3, 0.6, 0.8, 0.9 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ 20, 0, 20, 0, 20, 1 ]
+"times": PoolRealArray( 0, 0.1, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 32, 10, 17, 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("spriteGroup/lowerSprite:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false, true, false, true ]
 }
 
 [sub_resource type="Animation" id=13]
@@ -96,7 +105,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 0 ]
+"values": [ 32 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("spriteGroup/lowerSprite:position")
@@ -124,7 +133,41 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 11 ]
+"values": [ 18 ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "side_run"
+length = 0.5
+loop = true
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "walk_sound"
+}, {
+"args": [  ],
+"method": "walk_sound"
+} ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 40, 9, 10, 11, 14, 15 ]
 }
 
 [node name="lady" type="KinematicBody2D"]
@@ -145,32 +188,22 @@ notification = ExtResource( 2 )
 position = Vector2( -0.262064, 2.01119 )
 shape = ExtResource( 9 )
 
-[node name="groundArea" type="Area2D" parent="."]
-
-[node name="groundShape" type="CollisionShape2D" parent="groundArea"]
-position = Vector2( -1, 6.5 )
-shape = SubResource( 10 )
-one_way_collision = true
-
 [node name="spriteGroup" type="Node2D" parent="."]
 
 [node name="lowerSprite" type="Sprite" parent="spriteGroup"]
 texture = ExtResource( 11 )
-hframes = 12
-vframes = 2
+hframes = 8
+vframes = 6
 frame = 1
 region_enabled = true
-region_rect = Rect2( 0, 0, 192, 32 )
+region_rect = Rect2( 0, 0, 128, 96 )
 
 [node name="upperSprite" type="Sprite" parent="spriteGroup"]
 visible = false
 position = Vector2( 1, -8 )
 texture = ExtResource( 11 )
-hframes = 12
-vframes = 2
-frame = 22
 region_enabled = true
-region_rect = Rect2( 0, 0, 192, 32 )
+region_rect = Rect2( 96, 0, 16, 16 )
 
 [node name="sfx" type="Node2D" parent="."]
 
@@ -201,11 +234,14 @@ anims/side_grab = ExtResource( 7 )
 anims/side_hit = ExtResource( 12 )
 anims/side_idle = ExtResource( 8 )
 anims/side_jump = ExtResource( 10 )
+anims/side_run = SubResource( 14 )
 anims/side_walk = ExtResource( 6 )
 anims/top_idle_down = ExtResource( 13 )
 
-[connection signal="area_entered" from="groundArea" to="." method="_on_groundArea_area_entered"]
-[connection signal="area_exited" from="groundArea" to="." method="_on_groundArea_area_exited"]
-[connection signal="body_entered" from="groundArea" to="." method="_on_groundArea_body_entered"]
-[connection signal="body_exited" from="groundArea" to="." method="_on_groundArea_body_exited"]
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 1, 2.38419e-07 )
+scale = Vector2( 2, 2.4 )
+
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="viewport_entered" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_entered"]
+[connection signal="viewport_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_exited"]

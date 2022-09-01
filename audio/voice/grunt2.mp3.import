@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/grunt2.mp3-0e26ff300d32bb6f0aeb1d48598ea8fb.mp3str"
+
+[deps]
+
+source_file="res://audio/voice/grunt2.mp3"
+dest_files=[ "res://.import/grunt2.mp3-0e26ff300d32bb6f0aeb1d48598ea8fb.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

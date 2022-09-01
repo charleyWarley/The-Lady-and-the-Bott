@@ -3,7 +3,7 @@ extends Node2D
 signal star_collected(ability)
 
 const SOUNDS = {
-	"collected": preload("res://audio/cancelSound.mp3")
+	"collected": preload("res://audio/sfx/cancelSound.mp3")
 }
 
 onready var animPlayer = $AnimationPlayer
