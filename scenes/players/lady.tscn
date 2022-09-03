@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scenes/Objects/hitSpark.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/UI/notification.tscn" type="PackedScene" id=2]
@@ -136,9 +136,24 @@ tracks/0/keys = {
 "values": [ 18 ]
 }
 
+[sub_resource type="Animation" id=15]
+resource_name = "side_look_up"
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 3 ]
+}
+
 [sub_resource type="Animation" id=14]
 resource_name = "side_run"
-length = 0.5
+length = 0.6
 loop = true
 tracks/0/type = "method"
 tracks/0/path = NodePath(".")
@@ -167,7 +182,23 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 40, 9, 10, 11, 14, 15 ]
+"values": [ 8, 9, 10, 11, 13, 15 ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "side_turn"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 40 ]
 }
 
 [node name="lady" type="KinematicBody2D"]
@@ -234,7 +265,9 @@ anims/side_grab = ExtResource( 7 )
 anims/side_hit = ExtResource( 12 )
 anims/side_idle = ExtResource( 8 )
 anims/side_jump = ExtResource( 10 )
+anims/side_look_up = SubResource( 15 )
 anims/side_run = SubResource( 14 )
+anims/side_turn = SubResource( 16 )
 anims/side_walk = ExtResource( 6 )
 anims/top_idle_down = ExtResource( 13 )
 

@@ -2,7 +2,7 @@
 
 [resource]
 resource_name = "side_walk"
-length = 0.75
+length = 0.8
 loop = true
 tracks/0/type = "method"
 tracks/0/path = NodePath(".")

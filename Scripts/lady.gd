@@ -13,9 +13,28 @@ const SOUNDS = {
 	"damageTaken": preload("res://audio/voice/damageTaken.wav")
 }
 
+enum drags {
+	AIR = 24
+	STOP = 40
+	TURN = 5
+	BASIC = 30
+}
+
+enum jump_powers {
+	SIDE = -210
+	MARIO = -290
+	TOP = -36
+}
+
+enum speeds {
+	SLOW = 1
+	CLIMB = 2
+	WALK = 3
+	RUN = 4 
+	MAX = 180
+}
+
 const JUMP_BUFFER : float = 0.08
-const DRAG_GROUND : float = 0.7
-const DRAG_AIR : float = 0.65
 const GRAV : int = -10
 
 #the cast_to distance of the ray
@@ -23,22 +42,10 @@ const reachVector := Vector2(100, 0)
 const hitVector := Vector2(26, 0)
 const closeVector := Vector2(12, 0)
 
-enum JUMP_POWERS {
-	SIDE = -210
-	MARIO = -290
-	TOP = -36
-}
 
-enum speeds {
-	SLOW = 4
-	CLIMB = 9
-	WALK = 13
-	WALK = 13
-	RUN = 19 
-}
 
 var speed : int = speeds.WALK
-var jumpPower : int = JUMP_POWERS.TOP
+var jumpPower : int = jump_powers.TOP
 
 var velocity : Vector2
 var direction : Vector2
@@ -87,7 +94,8 @@ onready var collisionShape = $CollisionShape2D
 #func _on_groundArea_body_entered(_body) -> void: isGrounded = true
 #func _on_groundArea_body_exited(_body) -> void: isGrounded = false
 
-
+func _on_VisibilityNotifier2D_viewport_entered(_viewport): set_visible(true)
+func _on_VisibilityNotifier2D_viewport_exited(_viewport): set_visible(false)
 func _on_AnimationPlayer_animation_finished(animName) -> void:
 	if animName != "side_damage": return
 	match animName:
@@ -121,11 +129,13 @@ func _ready() -> void:
 	var _damage_signal = connect("damage_taken", self, "_on_damage_taken")
 	set_visible(false)
 
+
 func _process(_delta) -> void:
 	health = Global.orbs
 	check_sprite()
 	check_objects()
 	check_powerLevel()
+
 
 func _physics_process(delta) -> void:
 	if isDying: return
@@ -149,19 +159,27 @@ func _physics_process(delta) -> void:
 
 func set_velocity(delta) -> void:
 	var drag : float
-	if isGrounded: drag = DRAG_GROUND
-	else: drag = DRAG_AIR
+	if isGrounded: 
+		if abs(Input.get_axis("sav_left", "sav_right")) <= 0.0: drag = float(drags.STOP) 
+		elif sign(Input.get_axis("sav_left", "sav_right")) != sign(velocity.x): 
+			play_anim("side_turn", "walk")
+			drag = float(drags.TURN)
+		else: drag = float(drags.BASIC)
+	else: drag = float(drags.AIR)
+	drag *= 0.01
 	velocity += direction.normalized() * speed
 	if Global.moveType == Global.moveTypes.SIDE or Global.moveType == Global.moveTypes.MARIO: velocity = Vector2(check_x(drag, delta), check_y())
 	elif Global.moveType == Global.moveTypes.TOP: velocity = topdown_movement(drag, delta)
-	if velocity.x > -2 and velocity.x < 2: velocity.x = 0
+	if abs(velocity.x) > speeds.MAX: 
+		var dir = sign(velocity.x)
+		velocity.x = speeds.MAX * dir
 	var targetVelocity = get_target_velocity()
 	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
 	velocity = move_and_slide(velocity + bounceForce, Vector2.UP, false, 4, PI/4, false)
 	clear_bounceForce()
 
 
-func clear_bounceForce():
+func clear_bounceForce() -> void:
 	bounceForce = Vector2.ZERO
 
 
@@ -184,16 +202,16 @@ func check_side_anim() -> void:
 	if topSprite.visible == true: topSprite.set_visible(false)
 	if wasGrounded:
 		if !Abilities.isHitting and !Abilities.isGrabbing:
-			if direction == Vector2(): play_anim("side_idle", "")
+			if direction == Vector2(): 
+				if Input.is_action_pressed("sav_up"): play_anim("side_look_up", "")
+				else: play_anim("side_idle", "")
 			else: 
 				if speed == speeds.WALK: 
 					play_anim("side_walk", "walk")
 					isRunning = false
 				elif speed == speeds.RUN: 
-					if !isRunning: animPlayer.get_animation("side_run").track_set_key_value(1, 0, 40)
 					isRunning = true
 					play_anim("side_run", "walk")
-					animPlayer.get_animation("side_run").track_set_key_value(1, 0, 15)
 	elif velocity.y < 0: play_anim("side_jump", "jump")
 	elif velocity.y > 0: play_anim("side_fall", "")
 
@@ -206,7 +224,7 @@ func check_actions() -> void:
 	if Input.is_action_pressed("run") and isGrounded: speed = speeds.RUN
 	elif Input.is_action_just_released("run"): speed = speeds.WALK
 	if Input.is_action_just_pressed("hit"): hit()
-	#elif Input.is_action_pressed("use_ability"): use_ability()
+	elif Input.is_action_pressed("use_ability"): use_ability()
 	elif Input.is_action_pressed("interact"): grab()
 	elif Input.is_action_just_pressed("change_ability"): Abilities.change_ability()
 	
@@ -216,7 +234,7 @@ func check_actions() -> void:
 	if Input.is_action_just_released("hit"): Abilities.isHitting = false
 	elif Input.is_action_just_released("interact"): ungrab()
 
-func use_ability():
+func use_ability() -> void:
 	match Abilities.ability:
 		Abilities.abilities.NONE: 
 			print("no ability")
@@ -227,7 +245,7 @@ func use_ability():
 	print("ability activated")
 
 
-func deactivate_ability():
+func deactivate_ability() -> void:
 	match Abilities.ability:
 		Abilities.abilities.NONE: pass
 		Abilities.abilities.REACH: pass
@@ -250,9 +268,9 @@ func jump() -> void:
 	if coinFlip == 0: play_snd("grunt")
 	else: play_snd("grunt2")
 	match Global.moveType:
-		Global.moveTypes.SIDE: jumpPower = JUMP_POWERS.SIDE
-		Global.moveTypes.MARIO: jumpPower = JUMP_POWERS.MARIO
-		Global.moveTypes.TOP: jumpPower = JUMP_POWERS.TOP
+		Global.moveTypes.SIDE: jumpPower = jump_powers.SIDE
+		Global.moveTypes.MARIO: jumpPower = jump_powers.MARIO
+		Global.moveTypes.TOP: jumpPower = jump_powers.TOP
 	velocity.y = jumpPower
 
 
@@ -480,9 +498,4 @@ func check_y() -> float:
 func get_cur_time() -> float: return OS.get_ticks_msec() / 1000.0
 
   
-func _on_VisibilityNotifier2D_viewport_entered(_viewport):
-	set_visible(true)
 
-
-func _on_VisibilityNotifier2D_viewport_exited(_viewport):
-	set_visible(false)

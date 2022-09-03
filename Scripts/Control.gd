@@ -24,7 +24,6 @@ onready var camera = view.get_node("camera") setget set_camera, get_camera
 export(NodePath) onready var HUD = get_node(HUD)
 
 var connected = false
-var lady
 var bott
 var world setget set_world
 
@@ -185,8 +184,8 @@ func set_camera(level):
 	if level.name != "superMarioBros":
 		camera._set_current(true)
 		camera.set_zoom(Vector2(1,1))
-	lady = level.get_node("lady") #set the camera to follow the lady
-	camera.target = lady
-	if !connected: connected = lady.connect("world_changed", self, "_on_world_changed")
+	Global.lady = level.get_node("lady") #set the camera to follow the lady
+	camera.target = Global.lady
+	if !connected: connected = Global.lady.connect("world_changed", self, "_on_world_changed")
 
 func get_camera(): return camera

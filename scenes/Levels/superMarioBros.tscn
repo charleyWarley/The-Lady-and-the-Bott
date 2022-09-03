@@ -9,7 +9,7 @@
 [ext_resource path="res://scenes/Objects/key.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/enemies/goomba.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/Levels/pipeArea.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/players/flag.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/flag.gd" type="Script" id=10]
 [ext_resource path="res://scenes/Objects/sixCoinBox.tscn" type="PackedScene" id=11]
 [ext_resource path="res://sprites/Tile Sets/NES - Super Mario Bros - Tileset.png" type="Texture" id=12]
 [ext_resource path="res://scenes/Objects/coin.tscn" type="PackedScene" id=13]

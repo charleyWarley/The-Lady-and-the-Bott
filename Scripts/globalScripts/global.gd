@@ -7,6 +7,8 @@ var orbs = 0
 var jumps = 0
 var players = ""
 
+var lady
+
 var overWorld
 var levelOne
 var marioWorld
