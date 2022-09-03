@@ -8,8 +8,10 @@ var timePressedJump : float = 0.0
 var timeLeftGround : float = 0.0
 
 enum speeds {
+	EMPTY = 0
 	WALK = 2
 	RUN = 3
+	MAX = 6
 }
 
 const SOUNDS = {
@@ -19,93 +21,156 @@ const SOUNDS = {
 	"jump2": preload("res://audio/sfx/jump2.wav")
 }
 
-const JUMP_POWER_BOX : int = -80
-const JUMP_POWER_ONE : int = -200
-const JUMP_POWER_TWO : int = -150
-const BOX_SPEED : int = 1
-const BOX_DRAG : float= 0.3
+enum jump_power {
+	EMPTY = -250
+	FIRST = -300
+	SECOND = -200
+	}
 
-var budSpeed : int = speeds.WALK
-var budDragGround : float = 0.85
-var budDragAir : float = 0.95
+enum drags {
+	TURN = 26
+	AIR = 27
+	BASIC = 28
+	STOP = 100
+}
 
+var speed : int = speeds.WALK
+
+var canJump := true
 var canDoubleJump := false
 var wasGrounded := false
 var isFlipped := true
 var isRevealed := false
 var isFull := false
-var isMet := false 
 var isEmpty := true
 var isGrounded := false
+var isDamaged := false
 
 var sparks : int = 0
 var energy : int = 0
 var health : int = 0
-var jumps : int = 0
-var doubleJumps : int = 0
 
 export(PackedScene) onready var spark
-export(NodePath) onready var boxAnimation = get_node(boxAnimation)
-export(NodePath) onready var buddyAnimation = get_node(buddyAnimation)
+export(NodePath) onready var animPlayer = get_node(animPlayer)
 export(NodePath) onready var ray = get_node(ray)
 export(PackedScene) onready var fire
 export(NodePath) onready var sfx = get_node(sfx)
-onready var collisionShape = $alizeaCollision
-onready var sprite = collisionShape.get_node("Sprite")
-
+export(NodePath) onready var sprite = get_node(sprite)
 
 func _ready() -> void:
-	collisionShape.set_visible(true)
-	collisionShape.set_disabled(true)
-	add_to_group("boxes")
-	add_to_group("hitable")
 	add_to_group("buddy")
-	play_anim("box1")
+	play_anim("reveal")
+
 
 func hit(power : int, rightForce: bool):
 	var force = 80
 	if rightForce == false: force = -force
 	apply_central_impulse(Vector2(force, 0))
 	health -= power
-	#play_snd("hit")
 
-func _process(_delta) -> void:
-	Global.jumps = doubleJumps
-	if jumps >= 100:
-		energy -= 1
-		jumps = 0
-		
 
 func _physics_process(delta) -> void:
 	if get_colliding_bodies() and ray.get_collider(): isGrounded = true
 	elif !ray.get_collider(): isGrounded = false
-	if isGrounded and !wasGrounded: doubleJumps = 0
-	check_y()
-	var move = check_direction()
-	var speed
-	var drag
-	if !isMet: 
-		speed = BOX_SPEED
-		drag = BOX_DRAG #velocity += move * BOX_SPEED - BOX_DRAG * Vector2(velocity.x, 0)
-	else:
-		if Input.is_action_just_pressed("ali_down"): make_spark()
-		speed = budSpeed
-		if isGrounded: drag = budDragGround
-		else: drag = budDragAir
-		velocity += move * speed
-		if velocity.x > -2 and velocity.x < 2: velocity.x = 0
-		elif velocity.x > 12: velocity.x = 12
-		elif velocity.x < -12: velocity.x = -12
-		var targetVelocity = Vector2(check_x(drag, delta), velocity.y)
-		velocity = velocity.linear_interpolate(targetVelocity, 0.1)
-	apply_central_impulse(velocity)
-	#velocity = move_and_slide(velocity, Vector2.UP, false, 4, PI/4, false)
-
-	if move.x > 0.0 and !isFlipped:  flip()
-	elif move.x < 0.0 and isFlipped: flip()
-	
-	anim_check(move)
+	if isGrounded and !wasGrounded: canDoubleJump = true
+	if Input.is_action_just_pressed("ali_down"): make_spark()
+	var direction = check_direction()
+	set_velocity(direction, delta)
+	check_flip(direction)
+	anim_check(direction)
 	wasGrounded = isGrounded
+
+
+func check_flip(direction):
+	if direction.x > 0.0 and !isFlipped:  flip()
+	elif direction.x < 0.0 and isFlipped: flip()
+
+
+func set_velocity(direction, delta):
+	velocity += direction.normalized() * speed
+	if Global.moveType == Global.moveTypes.SIDE or Global.moveType == Global.moveTypes.MARIO: 
+		velocity = Vector2(check_x(delta), check_y())
+	elif Global.moveType == Global.moveTypes.TOP: 
+		pass #velocity = topdown_movement(drag, delta)
+	var targetVelocity = get_target_velocity(direction)
+	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
+	apply_central_impulse(velocity)
+
+
+func get_target_velocity(direction) -> Vector2:
+	if direction.x == 0:
+		if velocity.x > -10 and velocity.x < 10: velocity.x = 0
+	return velocity
+
+
+func check_x(delta) -> float:
+	var drag : float
+	if isGrounded: 
+		if abs(Input.get_axis("ali_left", "ali_right")) <= 0.0: drag = float(drags.STOP) 
+		elif sign(Input.get_axis("ali_left", "ali_right")) != sign(velocity.x): 
+			drag = float(drags.TURN)
+		else: drag = float(drags.BASIC)
+	else: drag = float(drags.AIR)
+	drag *= 0.01
+	velocity.x *= pow(1 - drag, delta * 10)
+	if abs(velocity.x) > speeds.MAX: 
+		var dir = sign(velocity.x)
+		velocity.x = speeds.MAX * dir
+	return velocity.x
+
+
+func check_y() -> float:
+	rotation = 0
+	if velocity.y < -350: velocity.y = -350
+	check_jump()
+	var timeDifference = get_cur_time() - timePressedJump
+	if isGrounded and velocity.y > 0: velocity.y = 0
+	elif !wasGrounded and isGrounded and timeDifference < JUMP_BUFFER:
+		check_jump()
+	if !Input.is_action_pressed("ali_jump"): velocity.y *= 0.1
+	return velocity.y
+
+func check_jump():
+	print(canDoubleJump)
+	var pressedJump = Input.is_action_just_pressed("ali_jump")
+	var releasedJump = Input.is_action_just_released("ali_jump")
+	if pressedJump:
+		timePressedJump = get_cur_time()
+		if isGrounded: 
+			if !isDamaged:
+				canJump = true
+				canDoubleJump = false
+				jump()
+			else: velocity.y = 0
+		elif get_cur_time() - timeLeftGround < JUMP_BUFFER:
+			canDoubleJump = true
+			jump()
+	else: velocity.y = 0
+
+func walk_snd(): play_snd("walk")
+
+
+func jump() -> void:
+	energy_check()
+	if canJump or canDoubleJump:
+		if !canDoubleJump:
+			print("first jump")
+			canJump = false
+			canDoubleJump = true
+			velocity.y = jump_power.FIRST
+			play_snd("jump1")
+			#emit()
+		elif canDoubleJump:
+			print("second jump")
+			canDoubleJump = false
+			velocity.y = jump_power.SECOND
+			play_snd("jump2")
+	else:
+		if !canDoubleJump:
+			print("empty jump")
+			velocity.y = jump_power.EMPTY
+			play_snd("jump0")
+	if !isGrounded and wasGrounded: timeLeftGround = get_cur_time()
 
 
 func make_spark() -> void:
@@ -119,39 +184,8 @@ func make_spark() -> void:
 		energy -= 1
 		sparks = 0
 	if energy < 0: energy = 0
-
-
-func check_x(drag, delta) -> float:
-	velocity.x *= pow(1 - drag, delta * 10)
-	return velocity.x
-
-
-func walk_snd():
-	play_snd("walk")
-
-
-func jump() -> void:
-	energy_check()
-	timeLeftGround = get_cur_time()
-	if !isEmpty:
-		if !canDoubleJump:
-			velocity.y = JUMP_POWER_ONE
-			play_snd("jump1")
-			jumps += 2
-			Global.jumps = jumps
-			emit()
-			doubleJumps = 0
-		elif doubleJumps <= 8:
-			velocity.y = JUMP_POWER_TWO
-			play_snd("jump2")
-			jumps += 1
-			doubleJumps += 1
-	else:
-		if !canDoubleJump:
-			velocity.y = JUMP_POWER_BOX
-			play_snd("jump0")
-
-
+	
+	
 func get_cur_time() -> float:
 	var time = OS.get_ticks_msec() / 1000.0
 	return time
@@ -159,29 +193,16 @@ func get_cur_time() -> float:
 
 func check_direction() -> Vector2:
 	var move = Vector2()
-	if Input.is_action_pressed("ali_left"): move.x -= 1
-	elif Input.is_action_pressed("ali_right"): move.x += 1
+	if Input.is_action_pressed("ali_left"): move.x = -1
+	elif Input.is_action_pressed("ali_right"): move.x = 1
+	if Input.is_action_just_released("ali_left") or Input.is_action_just_pressed("ali_right"): move.x = 0
 	move = move.normalized()
 	return move
 
 
-func check_y() -> void:
-	if isMet and isRevealed:
-		var pressed_jump = Input.is_action_just_pressed("ali_up")
-		if pressed_jump:
-			if isGrounded: canDoubleJump = false
-			else: canDoubleJump = true
-			jump()
-		else: velocity.y = 0
-		rotation = 0
-		#rotation = lerp(rotation, 0, 0.25)
-	if isGrounded and velocity.y > 0: velocity.y = 0
-
 func flip() -> void:
-	if !isMet: return
-	else:
-		sprite.flip_h = !sprite.flip_h
-		isFlipped = !isFlipped
+	sprite.flip_h = !sprite.flip_h
+	isFlipped = !isFlipped
 
 
 func energy_check() -> void:
@@ -196,55 +217,31 @@ func energy_check() -> void:
 			isFull = true
 
 
-func play_anim(newAnimation) -> void:
-	var animPlayer
-	if !isMet: animPlayer = boxAnimation
-	else: animPlayer = buddyAnimation
-	match animPlayer.current_animation: 
-		newAnimation: return
-		"reveal": return
-	animPlayer.play(newAnimation)
-
 func anim_check(move) -> void:
 	if !isEmpty:
-		if !isMet:
-			if health == 2: play_anim("box2")
-			elif health == 1: play_anim("box2_hit1")
-			elif health <= 0:  play_anim("box2_hit2")
-		else:
-			if !isRevealed: return
-			elif isGrounded:
-				if move == Vector2(): play_anim("idle2")
-				else: play_anim("walk2")
-			elif velocity.y < 0: play_anim("jump")
-			elif velocity.y > 0: play_anim("fall")
+		if !isRevealed: return
+		elif isGrounded:
+			if move == Vector2(): play_anim("idle")
+			else: play_anim("walk")
+		elif velocity.y < 0: play_anim("jump")
+		elif velocity.y > 0: play_anim("fall")
 	else:
-		if !isMet:
-			if health == 0: play_anim("box1")
-			elif health == 1: 
-				play_anim("box1_hit1")
-				#health += 1
-			elif health == 2: 
-				play_anim("box1_hit2")
-				#health += 1
-		else:
-			if !isRevealed: return
-			elif isGrounded:
-				if move == Vector2(): play_anim("idle")
-				else: play_anim("walk")
-			elif velocity.y < 0: play_anim("jump")
-			elif velocity.y > 0: play_anim("fall")
-
-	if health >= 3 and !isMet:
-		isMet = true
-		play_anim("reveal")
+		if !isRevealed: return
+		elif isGrounded:
+			if move == Vector2(): play_anim("idle")
+			else: play_anim("walk")
+		elif velocity.y < 0: play_anim("jump")
+		elif velocity.y > 0: play_anim("fall")
 
 
 func play_snd(snd) -> void:
 	if !SOUNDS.has(snd): return
 	sfx.stream = SOUNDS[snd]
 	sfx.play()
-
+	
+func play_anim(anim) -> void:
+	if anim == animPlayer.current_animation: return
+	animPlayer.play(anim)
 
 func emit() -> void:
 	var newFire = fire.instance()
@@ -256,5 +253,3 @@ func emit() -> void:
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name != "reveal": return
 	isRevealed = true
-	#remove_from_group("boxes")
-	$boxCollision.queue_free()

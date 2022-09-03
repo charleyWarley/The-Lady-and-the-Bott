@@ -35,7 +35,6 @@ func change_icon(newIcon):
 
 func _ready():
 	check_icon()
-	set_visible(false)
 
 
 func _process(_delta):

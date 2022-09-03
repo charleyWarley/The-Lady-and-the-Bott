@@ -1,0 +1,198 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://fonts/uiTheme.tres" type="Theme" id=1]
+
+[node name="inputOptions" type="Node2D"]
+
+[node name="tween" type="Tween" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 101.0
+margin_top = 89.0
+margin_right = 149.0
+margin_bottom = 143.0
+
+[node name="lady" type="Button" parent="VBoxContainer"]
+margin_right = 48.0
+margin_bottom = 25.0
+theme = ExtResource( 1 )
+text = "lady"
+flat = true
+
+[node name="bott" type="Button" parent="VBoxContainer"]
+margin_top = 29.0
+margin_right = 48.0
+margin_bottom = 54.0
+theme = ExtResource( 1 )
+text = "bott"
+flat = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 15.0
+margin_top = 1.0
+margin_right = 271.0
+margin_bottom = 242.0
+custom_constants/separation = 20
+
+[node name="actions" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 126.0
+margin_bottom = 241.0
+custom_constants/separation = 5
+
+[node name="lookUp" type="Label" parent="HBoxContainer/actions"]
+margin_right = 126.0
+margin_bottom = 19.0
+theme = ExtResource( 1 )
+text = "look up"
+
+[node name="moveLeft" type="Label" parent="HBoxContainer/actions"]
+margin_top = 24.0
+margin_right = 126.0
+margin_bottom = 43.0
+theme = ExtResource( 1 )
+text = "move left"
+
+[node name="duckDown" type="Label" parent="HBoxContainer/actions"]
+margin_top = 48.0
+margin_right = 126.0
+margin_bottom = 67.0
+theme = ExtResource( 1 )
+text = "duck down"
+
+[node name="moveRight" type="Label" parent="HBoxContainer/actions"]
+margin_top = 72.0
+margin_right = 126.0
+margin_bottom = 91.0
+theme = ExtResource( 1 )
+text = "move right"
+
+[node name="run" type="Label" parent="HBoxContainer/actions"]
+margin_top = 96.0
+margin_right = 126.0
+margin_bottom = 115.0
+theme = ExtResource( 1 )
+text = "run"
+
+[node name="jump" type="Label" parent="HBoxContainer/actions"]
+margin_top = 120.0
+margin_right = 126.0
+margin_bottom = 139.0
+theme = ExtResource( 1 )
+text = "jump"
+
+[node name="hit" type="Label" parent="HBoxContainer/actions"]
+margin_top = 144.0
+margin_right = 126.0
+margin_bottom = 163.0
+theme = ExtResource( 1 )
+text = "hit"
+
+[node name="interact" type="Label" parent="HBoxContainer/actions"]
+margin_top = 168.0
+margin_right = 126.0
+margin_bottom = 187.0
+theme = ExtResource( 1 )
+text = "interact"
+
+[node name="changeAbility" type="Label" parent="HBoxContainer/actions"]
+margin_top = 192.0
+margin_right = 126.0
+margin_bottom = 211.0
+theme = ExtResource( 1 )
+text = "change ability"
+
+[node name="useAbility" type="Label" parent="HBoxContainer/actions"]
+margin_top = 216.0
+margin_right = 126.0
+margin_bottom = 235.0
+theme = ExtResource( 1 )
+text = "use ability"
+
+[node name="currentInputs" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 146.0
+margin_right = 230.0
+margin_bottom = 241.0
+custom_constants/separation = -1
+
+[node name="lookUp" type="Button" parent="HBoxContainer/currentInputs"]
+margin_right = 84.0
+margin_bottom = 25.0
+theme = ExtResource( 1 )
+text = "W"
+flat = true
+
+[node name="moveLeft" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 24.0
+margin_right = 84.0
+margin_bottom = 49.0
+theme = ExtResource( 1 )
+text = "A"
+flat = true
+
+[node name="duckDown" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 48.0
+margin_right = 84.0
+margin_bottom = 73.0
+theme = ExtResource( 1 )
+text = "S"
+flat = true
+
+[node name="moveRight" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 72.0
+margin_right = 84.0
+margin_bottom = 97.0
+theme = ExtResource( 1 )
+text = "D"
+flat = true
+
+[node name="run" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 96.0
+margin_right = 84.0
+margin_bottom = 121.0
+theme = ExtResource( 1 )
+text = "NUMPAD-4"
+flat = true
+
+[node name="jump" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 120.0
+margin_right = 84.0
+margin_bottom = 145.0
+theme = ExtResource( 1 )
+text = "NUMPAD-5"
+flat = true
+
+[node name="hit" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 144.0
+margin_right = 84.0
+margin_bottom = 169.0
+theme = ExtResource( 1 )
+text = "NUMPAD-6"
+flat = true
+
+[node name="interact" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 168.0
+margin_right = 84.0
+margin_bottom = 193.0
+theme = ExtResource( 1 )
+text = "NUMPAD-8"
+flat = true
+
+[node name="changeAbility" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 192.0
+margin_right = 84.0
+margin_bottom = 217.0
+theme = ExtResource( 1 )
+text = "NUMPAD-7"
+flat = true
+
+[node name="useAbility" type="Button" parent="HBoxContainer/currentInputs"]
+margin_top = 216.0
+margin_right = 84.0
+margin_bottom = 241.0
+theme = ExtResource( 1 )
+text = "NUMPAD-9"
+flat = true

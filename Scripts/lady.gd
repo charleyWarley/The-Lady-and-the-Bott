@@ -14,10 +14,10 @@ const SOUNDS = {
 }
 
 enum drags {
-	AIR = 24
-	STOP = 40
 	TURN = 5
-	BASIC = 30
+	AIR = 15
+	BASIC = 18
+	STOP = 40
 }
 
 enum jump_powers {
@@ -162,7 +162,7 @@ func set_velocity(delta) -> void:
 	if isGrounded: 
 		if abs(Input.get_axis("sav_left", "sav_right")) <= 0.0: drag = float(drags.STOP) 
 		elif sign(Input.get_axis("sav_left", "sav_right")) != sign(velocity.x): 
-			play_anim("side_turn", "walk")
+			play_anim("side_turn", "")
 			drag = float(drags.TURN)
 		else: drag = float(drags.BASIC)
 	else: drag = float(drags.AIR)
@@ -207,11 +207,11 @@ func check_side_anim() -> void:
 				else: play_anim("side_idle", "")
 			else: 
 				if speed == speeds.WALK: 
-					play_anim("side_walk", "walk")
+					play_anim("side_walk", "")
 					isRunning = false
 				elif speed == speeds.RUN: 
 					isRunning = true
-					play_anim("side_run", "walk")
+					play_anim("side_run", "")
 	elif velocity.y < 0: play_anim("side_jump", "jump")
 	elif velocity.y > 0: play_anim("side_fall", "")
 
@@ -355,7 +355,7 @@ func check_collisions() -> void:
 				if Input.is_action_pressed("use_ability") and Abilities.canStomp: if collider.is_in_group("breakable"): collider.queue_free()
 		
 		
-		if collider.is_in_group("boxes"):
+		if collider.is_in_group("boxes") or collider.is_in_group("buddy"):
 			Abilities.isGrabbing = false
 			collider.apply_central_impulse(-collision.normal * pushForce)
 
@@ -416,7 +416,7 @@ func hit() -> void:
 
 func grab() -> void:
 	print("grabbing")
-	speed = speeds.SLOW
+	speed = speeds.CLIMB
 	if !Abilities.isGrabbing:
 		if Abilities.canReach: spark(true)
 		Abilities.isGrabbing = true
@@ -432,7 +432,7 @@ func grab() -> void:
 			if abs(hitForce) >= 10: hitForce = sign(velocity.x) * 10
 			elif abs(hitForce) < 4 : hitForce = sign(velocity.x) * 4
 			print(hitForce)
-			collider.apply_central_impulse(Vector2(hitForce , 0))
+			collider.apply_central_impulse(Vector2(hitForce, 0))
 
 
 func check_direction() -> Vector2:
@@ -470,6 +470,7 @@ func check_x(drag, delta) -> float:
 
 
 func check_y() -> float:
+	if velocity.y < -375: velocity.y = -375
 	if Abilities.isHanging:
 		if Input.is_action_pressed("sav_up"): velocity.y = -speeds.CLIMB
 		else: velocity.y = 0

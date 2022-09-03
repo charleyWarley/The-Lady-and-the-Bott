@@ -30,7 +30,7 @@ var world setget set_world
 var isMusicPlaying = false
 var canPause = false
 var firstWorld setget set_firstWorld
-
+var wasReset = false
 
 func set_firstWorld(location):
 	var movement
@@ -54,22 +54,24 @@ func set_firstWorld(location):
 	Global.set_deferred("moveType", movement)
 
 #restart the level when finished (for unfinished game only)
-func _on_level_exited(_body) -> void: var _exit = get_tree().reload_current_scene()
+func _on_level_exited(_body) -> void: reset_game()
 
-
+func change_HUD_visibility():
+	var elements = HUD.get_children()
+	for element in elements:
+		element.set_visible(!element.visible)
+	
 #executed when the player clicks start game
 func _on_game_started(_players) -> void:
+	change_HUD_visibility()
 	canPause = true
 	set_song("gameSong")
 	Global.set_deferred("moveType", Global.moveTypes.TOP)
-	var elements = HUD.get_children()
-	for element in elements:
-		element.set_visible(true)
 	Global.players = ("single")
 	mainMenu.queue_free() #clear the title screen
 	set_deferred("firstWorld", "overWorld")
 
-	
+
 func _on_world_changed(location):
 	camera.loading.set_visible(true)
 	var movement
@@ -118,14 +120,15 @@ func _input(event) -> void:
 			if event.is_action("pause"): 
 				pause()
 				return
-				
 
 
-func reset_game():
-	get_tree().reload_current_scene()
+func reset_game() -> void: wasReset = get_tree().reload_current_scene()
+
 
 func _ready() -> void:
+	change_HUD_visibility()
 	loading.set_visible(false)
+	mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN) #hide the mouse
 	set_song("menuSong")
 	mainMenu.connect("game_started", self, "_on_game_started") #connect the game_started event to the _on_game_started function
@@ -133,6 +136,7 @@ func _ready() -> void:
 	pauseButtons.connect("crtButton_pressed", self, "set_crtVisibility")
 	pauseButtons.connect("quitButton_pressed", self, "reset_game")
 
+func _process(delta) -> void: if wasReset: mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
 
 func pause() -> void:
 	if !canPause: return
@@ -182,10 +186,11 @@ func set_song(newSong):
 
 func set_camera(level):
 	if level.name != "superMarioBros":
-		camera._set_current(true)
+		camera.make_current()
 		camera.set_zoom(Vector2(1,1))
 	Global.lady = level.get_node("lady") #set the camera to follow the lady
 	camera.target = Global.lady
 	if !connected: connected = Global.lady.connect("world_changed", self, "_on_world_changed")
+
 
 func get_camera(): return camera

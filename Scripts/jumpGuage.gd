@@ -1,7 +1,6 @@
 extends Node2D
 
-func _ready():
-	set_visible(false)
+
 	
 func _process(_delta):
 	match Global.jumps:

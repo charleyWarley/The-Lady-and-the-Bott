@@ -28,7 +28,9 @@ func hit(power : int, rightForce : bool):
 	if health == 2: sprite.frame = 1
 	elif health == 1: sprite.frame = 2
 	elif health <= 0:
-		if contents != null: drop_item()
+		if contents != null: 
+			print("item dropped")
+			drop_item()
 		queue_free()
 
 
@@ -36,7 +38,7 @@ func drop_item():
 	var newItem = contents.instance()
 	get_parent().add_child(newItem)
 	newItem.set_position(position)
-	
+	print(newItem.name, "  ", newItem.position, " from ", self.position)
 
 
 func play_snd(snd) -> void:

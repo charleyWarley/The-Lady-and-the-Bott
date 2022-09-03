@@ -1,11 +1,11 @@
 extends Area2D
 
-var strength = 350
+var strength = -350
 
 
 func _on_bounceSpot_body_entered(body):
 	if body.name == "lady": 
-		body.bounceForce.y += Vector2.UP.y * strength
+		body.bounceForce.y = strength
 
 
 func _on_bounceSpot_body_exited(body):

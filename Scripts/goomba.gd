@@ -33,9 +33,6 @@ func _process(_delta):
 func _physics_process(_delta):
 	var velocity : Vector2
 	rotation = 0
-	for index in get_slide_count():
-		var collision = get_slide_collision(index)
-		var collider = collision.collider
 	if visible == false: return
 	if !is_on_floor(): velocity.y = GRAVITY
 	else: velocity.y = 0

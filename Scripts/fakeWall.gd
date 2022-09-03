@@ -2,7 +2,7 @@ extends StaticBody2D
 
 func _ready():
 	add_to_group("hitable")
-	add_to_group("breakable")
+	#add_to_group("breakable")
 	set_visible(false)
 
 func _on_VisibilityNotifier2D_screen_entered():

@@ -5,7 +5,6 @@ var orbs = 0
 
 func _ready() -> void:
 	play_anim("empty")
-	set_visible(false)
 
 
 func _process(_delta) -> void:
