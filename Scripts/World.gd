@@ -1,4 +1,5 @@
-extends Node2D
+extends Node
 
 func _ready():
-	Global.moveType
+	Global.set_moveType(Global.moveTypes.SIDE)
+	Global.lady.position = $startPosition.position

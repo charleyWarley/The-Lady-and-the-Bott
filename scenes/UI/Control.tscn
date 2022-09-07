@@ -4,7 +4,7 @@
 [ext_resource path="res://scenes/Menus/MainMenu.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Control.gd" type="Script" id=3]
 [ext_resource path="res://scenes/Levels/World.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scenes/camera.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/normalCamera.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/cRT_Filter.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/Orbs/OrbCase.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/Menus/pauseMenu.tscn" type="PackedScene" id=8]
@@ -49,6 +49,8 @@ shader_param/dither = 0.15
 pause_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = -1.0
 script = ExtResource( 3 )
 music = NodePath("audio/music")
 single = NodePath("singleView")
@@ -80,8 +82,8 @@ size = Vector2( 256, 240 )
 
 [node name="mainMenu" parent="singleView/view" index="0" instance=ExtResource( 2 )]
 
-[node name="camera" parent="singleView/view" index="1" instance=ExtResource( 5 )]
-loading = NodePath("../../../loadingScreen")
+[node name="normalCamera" parent="singleView/view" index="1" instance=ExtResource( 5 )]
+zoom = Vector2( 1, 1 )
 
 [node name="UI" type="Node2D" parent="singleView"]
 
@@ -118,5 +120,8 @@ margin_bottom = 40.0
 texture = ExtResource( 19 )
 
 [node name="cRT_Filter" parent="." instance=ExtResource( 6 )]
+__meta__ = {
+"_edit_lock_": true
+}
 
 [editable path="singleView"]

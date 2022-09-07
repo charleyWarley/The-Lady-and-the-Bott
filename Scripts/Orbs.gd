@@ -26,13 +26,11 @@ func _process(_delta) -> void:
 		if off: return
 		match body.name:
 			"lady":
-				body.emit_signal("camera_shake", 1)
+				Global.camera.shake(25)
 				Global.orbs += 1
 				break_it()
 			"bott":
-				if body.power < 60:
-					body.power += 1
-				body.power_check()
+				Global.orbs += 1
 				break_it()
 
 

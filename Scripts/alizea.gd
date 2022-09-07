@@ -1,11 +1,6 @@
 extends RigidBody2D
 
-const JUMP_BUFFER : float = 0.4
-
-var velocity : Vector2
-
-var timePressedJump : float = 0.0
-var timeLeftGround : float = 0.0
+signal damage_taken(damage, direction)
 
 enum speeds {
 	EMPTY = 0
@@ -13,14 +8,8 @@ enum speeds {
 	RUN = 3
 	MAX = 6
 }
-
-const SOUNDS = {
-	"walk": preload("res://audio/sfx/walksound.wav"),
-	"jump0": preload("res://audio/sfx/jump0.wav"),
-	"jump1": preload("res://audio/sfx/jump1.wav"),
-	"jump2": preload("res://audio/sfx/jump2.wav")
-}
-
+var speed : int = speeds.WALK
+ 
 enum jump_power {
 	EMPTY = -250
 	FIRST = -300
@@ -34,8 +23,23 @@ enum drags {
 	STOP = 100
 }
 
-var speed : int = speeds.WALK
+const SOUNDS = {
+	"walk": preload("res://audio/sfx/walksound.wav"), 
+	"jump0": preload("res://audio/sfx/jump0.wav"),
+	"jump1": preload("res://audio/sfx/jump1.wav"),
+	"jump2": preload("res://audio/sfx/jump2.wav")
+}
 
+const JUMP_BUFFER : float = 0.4
+
+var velocity : Vector2
+var bounceForce : Vector2
+var timePressedJump : float = 0.0
+var timeLeftGround : float = 0.0
+var sparks : int = 0
+var energy : int = 0
+var health : int = 0
+var isInvinsible := false
 var canJump := true
 var canDoubleJump := false
 var wasGrounded := false
@@ -46,31 +50,50 @@ var isEmpty := true
 var isGrounded := false
 var isDamaged := false
 
-var sparks : int = 0
-var energy : int = 0
-var health : int = 0
-
 export(PackedScene) onready var spark
 export(NodePath) onready var animPlayer = get_node(animPlayer)
 export(NodePath) onready var ray = get_node(ray)
 export(PackedScene) onready var fire
 export(NodePath) onready var sfx = get_node(sfx)
-export(NodePath) onready var sprite = get_node(sprite)
+export(NodePath) onready var sprite32 = get_node(sprite32) as Sprite
+export(NodePath) onready var sprite8 = get_node(sprite8) as Sprite
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	match anim_name:
+		"reveal": isRevealed = true
+		"damage_taken": 
+			isDamaged = false
+			isInvinsible = false
+
 
 func _ready() -> void:
 	add_to_group("buddy")
 	play_anim("reveal")
+	connect("damage_taken", self, "_on_damage_taken")
 
 
-func hit(power : int, rightForce: bool):
-	var force = 80
-	if rightForce == false: force = -force
-	apply_central_impulse(Vector2(force, 0))
-	health -= power
+func _on_damage_taken(damage: int, dir: Vector2) -> void:
+	if isInvinsible or isDamaged: return
+	#if Global.orbs <= 0:
+	#	print("dead")
+	#	return
+	Global.orbs -= damage
+	print("bott took ", damage, " damage from ", dir)
+	print("health is now ", health)
+	isDamaged = true
+	bounceForce.x = -dir.x * 275
+	bounceForce.y = -275
 
 
 func _physics_process(delta) -> void:
-	if get_colliding_bodies() and ray.get_collider(): isGrounded = true
+	var collider = ray.get_collider()
+	var dir = ray.get_collision_normal()
+	if collider:
+		if collider.is_in_group("hazards"): emit_signal("damage_taken", 1, dir)
+	if get_colliding_bodies() and collider: 
+		isGrounded = true
+		if collider.is_in_group("enemies"): collider.take_damage()
+		if collider.is_in_group("boxes"): collider.destroy()
 	elif !ray.get_collider(): isGrounded = false
 	if isGrounded and !wasGrounded: canDoubleJump = true
 	if Input.is_action_just_pressed("ali_down"): make_spark()
@@ -78,9 +101,19 @@ func _physics_process(delta) -> void:
 	set_velocity(direction, delta)
 	check_flip(direction)
 	anim_check(direction)
+	check_sprite()
 	wasGrounded = isGrounded
 
 
+func check_sprite():
+	match Global.graphicStyle:
+		"8": 
+			$Sprite8.set_visible(true)
+			$Sprite32.set_visible(false)
+		"32": 
+			$Sprite32.set_visible(true)
+			$Sprite8.set_visible(false)
+			
 func check_flip(direction):
 	if direction.x > 0.0 and !isFlipped:  flip()
 	elif direction.x < 0.0 and isFlipped: flip()
@@ -91,12 +124,14 @@ func set_velocity(direction, delta):
 	if Global.moveType == Global.moveTypes.SIDE or Global.moveType == Global.moveTypes.MARIO: 
 		velocity = Vector2(check_x(delta), check_y())
 	elif Global.moveType == Global.moveTypes.TOP: 
-		pass #velocity = topdown_movement(drag, delta)
+		pass
 	var targetVelocity = get_target_velocity(direction)
 	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
+	velocity = velocity + bounceForce
 	apply_central_impulse(velocity)
-
-
+	bounceForce = Vector2.ZERO
+	
+	
 func get_target_velocity(direction) -> Vector2:
 	if direction.x == 0:
 		if velocity.x > -10 and velocity.x < 10: velocity.x = 0
@@ -130,8 +165,8 @@ func check_y() -> float:
 	if !Input.is_action_pressed("ali_jump"): velocity.y *= 0.1
 	return velocity.y
 
+
 func check_jump():
-	print(canDoubleJump)
 	var pressedJump = Input.is_action_just_pressed("ali_jump")
 	var releasedJump = Input.is_action_just_released("ali_jump")
 	if pressedJump:
@@ -145,6 +180,7 @@ func check_jump():
 		elif get_cur_time() - timeLeftGround < JUMP_BUFFER:
 			canDoubleJump = true
 			jump()
+	elif releasedJump: velocity.y *= -0.5
 	else: velocity.y = 0
 
 func walk_snd(): play_snd("walk")
@@ -159,7 +195,7 @@ func jump() -> void:
 			canDoubleJump = true
 			velocity.y = jump_power.FIRST
 			play_snd("jump1")
-			#emit()
+			emit()
 		elif canDoubleJump:
 			print("second jump")
 			canDoubleJump = false
@@ -184,8 +220,8 @@ func make_spark() -> void:
 		energy -= 1
 		sparks = 0
 	if energy < 0: energy = 0
-	
-	
+
+
 func get_cur_time() -> float:
 	var time = OS.get_ticks_msec() / 1000.0
 	return time
@@ -201,7 +237,8 @@ func check_direction() -> Vector2:
 
 
 func flip() -> void:
-	sprite.flip_h = !sprite.flip_h
+	sprite8.flip_h = !sprite8.flip_h
+	sprite32.flip_h = !sprite32.flip_h
 	isFlipped = !isFlipped
 
 
@@ -218,30 +255,29 @@ func energy_check() -> void:
 
 
 func anim_check(move) -> void:
-	if !isEmpty:
-		if !isRevealed: return
-		elif isGrounded:
-			if move == Vector2(): play_anim("idle")
-			else: play_anim("walk")
-		elif velocity.y < 0: play_anim("jump")
-		elif velocity.y > 0: play_anim("fall")
-	else:
-		if !isRevealed: return
-		elif isGrounded:
-			if move == Vector2(): play_anim("idle")
-			else: play_anim("walk")
-		elif velocity.y < 0: play_anim("jump")
-		elif velocity.y > 0: play_anim("fall")
+	if !isRevealed or isInvinsible: return
+	if isDamaged:
+		isInvinsible = true
+		play_anim("damage_taken")
+		print("invinsibility started")
+		return
+	elif isGrounded and !isDamaged:
+		if move == Vector2(): play_anim("idle")
+		else: play_anim("walk")
+	elif velocity.y < 0: play_anim("jump")
+	elif velocity.y > 0: play_anim("fall")
 
 
 func play_snd(snd) -> void:
 	if !SOUNDS.has(snd): return
 	sfx.stream = SOUNDS[snd]
 	sfx.play()
-	
+
+
 func play_anim(anim) -> void:
 	if anim == animPlayer.current_animation: return
 	animPlayer.play(anim)
+
 
 func emit() -> void:
 	var newFire = fire.instance()
@@ -250,6 +286,4 @@ func emit() -> void:
 	newFire.emitting = !newFire.emitting
 
 
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name != "reveal": return
-	isRevealed = true
+

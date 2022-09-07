@@ -93,7 +93,6 @@ tracks/1/keys = {
 }
 
 [node name="goomba" type="KinematicBody2D"]
-position = Vector2( 169, 87 )
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

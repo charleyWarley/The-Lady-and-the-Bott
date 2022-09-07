@@ -2,8 +2,7 @@
 
 [ext_resource path="res://scenes/Objects/Door.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Objects/card.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/players/alizea.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scenes/players/lady.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/players/bott.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/Objects/Spikes.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Objects/Power_Zone.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/Objects/floatingBox.tscn" type="PackedScene" id=7]
@@ -15,12 +14,14 @@
 [ext_resource path="res://scenes/Objects/bounceSpot.tscn" type="PackedScene" id=13]
 [ext_resource path="res://scenes/Levels/tileMapChunk.tscn" type="PackedScene" id=14]
 [ext_resource path="res://scenes/Objects/fakeWall.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Scripts/World.gd" type="Script" id=16]
 [ext_resource path="res://sprites/spot.png" type="Texture" id=18]
 [ext_resource path="res://sprites/light.png" type="Texture" id=19]
 [ext_resource path="res://scenes/lightFilter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://scenes/Objects/key.tscn" type="PackedScene" id=22]
 
 [node name="World" type="Node"]
+script = ExtResource( 16 )
 
 [node name="setting" type="Node" parent="."]
 
@@ -203,15 +204,15 @@ position = Vector2( -721, -151 )
 position = Vector2( -487, -408 )
 
 [node name="crate" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
-position = Vector2( -977, -536 )
+position = Vector2( -756, -470 )
 contents = ExtResource( 8 )
 
 [node name="crate8" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
-position = Vector2( -979, -481 )
+position = Vector2( -979, -472 )
 contents = ExtResource( 8 )
 
 [node name="crate9" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
-position = Vector2( -957, -541 )
+position = Vector2( -965, -541 )
 contents = ExtResource( 3 )
 
 [node name="crate10" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
@@ -244,7 +245,7 @@ position = Vector2( -499, -574 )
 position = Vector2( -569, -336 )
 
 [node name="crate2" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
-position = Vector2( -876, -538 )
+position = Vector2( -841, -536 )
 
 [node name="crate3" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
 position = Vector2( -920, -416 )
@@ -261,7 +262,7 @@ position = Vector2( -819, -418 )
 position = Vector2( -845, -418 )
 
 [node name="crate7" parent="setting/Environment/Objects" instance=ExtResource( 10 )]
-position = Vector2( -869, -480 )
+position = Vector2( -864, -472 )
 
 [node name="card" parent="setting/Environment/Objects" instance=ExtResource( 2 )]
 position = Vector2( -626, -548 )
@@ -290,6 +291,9 @@ __meta__ = {
 [node name="Spikes1" parent="setting/Environment/Spikes" instance=ExtResource( 5 )]
 position = Vector2( -479, -389 )
 
+[node name="Spikes3" parent="setting/Environment/Spikes" instance=ExtResource( 5 )]
+position = Vector2( -900, -533 )
+
 [node name="Spikes2" parent="setting/Environment/Spikes" instance=ExtResource( 5 )]
 position = Vector2( -413, -388 )
 
@@ -311,10 +315,6 @@ position = Vector2( -785, -533 )
 visible = false
 light_mask = 513
 position = Vector2( -831, -533 )
-
-[node name="lady" parent="." instance=ExtResource( 4 )]
-light_mask = 4
-position = Vector2( -1006, -542 )
 
 [node name="coinBox" parent="." instance=ExtResource( 12 )]
 position = Vector2( -758, 22 )
@@ -341,6 +341,9 @@ position = Vector2( -729, 58 )
 
 [node name="bounceSpot" parent="." instance=ExtResource( 13 )]
 position = Vector2( -690, -400 )
+
+[node name="startPosition" type="Position2D" parent="."]
+position = Vector2( -1001, -546 )
 
 [editable path="setting/tileMap/chunk1"]
 [editable path="setting/tileMap/chunk2"]

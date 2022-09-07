@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/Objects/coin.tscn" type="PackedScene" id=1]
-[ext_resource path="res://sprites/Tile Sets/NES - Super Mario Bros - Item and Brick Blocks.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Tile Sets/brickTileset.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/coinBox2.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=9]
@@ -31,7 +31,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ false ]
+"values": [ true ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:position")
@@ -59,12 +59,12 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 4 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=15]
 resource_name = "hit"
-length = 0.5
+length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:position")
 tracks/0/interp = 2
@@ -80,6 +80,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=12]
 resource_name = "idle"
+length = 0.5
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -88,10 +89,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4, 0.6, 0.9 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 1, 2, 1 ]
+"values": [ 0, 1, 2, 0 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:position")
@@ -118,7 +119,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ true ]
+"values": [ false ]
 }
 
 [node name="coinBox" type="StaticBody2D"]
@@ -130,11 +131,10 @@ prize = ExtResource( 1 )
 shape = SubResource( 9 )
 
 [node name="Sprite" type="Sprite" parent="."]
-visible = false
 texture = ExtResource( 2 )
-hframes = 5
+hframes = 3
 region_enabled = true
-region_rect = Rect2( 80, 112, 80, 16 )
+region_rect = Rect2( 0, 48, 48, 16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"

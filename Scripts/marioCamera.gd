@@ -6,7 +6,7 @@ var rightLimit = 10000000
 
 var screenSize
 
-export(NodePath) onready var target = get_node(target)
+onready var target = Global.lady
 
 
 func _ready(): screenSize = self.get_viewport_rect().size

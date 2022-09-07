@@ -16,5 +16,3 @@ func _process(_delta):
 			if Input.is_action_just_released("sav_up"): isJumpPressed = true
 			if isJumpPressed: queue_free()
 
-
-

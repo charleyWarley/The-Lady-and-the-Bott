@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/normalCamera.gd" type="Script" id=1]
+
+[node name="normalCamera" type="Camera2D"]
+zoom = Vector2( 0.25, 0.25 )
+script = ExtResource( 1 )
+
+[node name="shakeTimer" type="Timer" parent="."]
+
+[node name="Tween" type="Tween" parent="."]
+
+[connection signal="timeout" from="shakeTimer" to="." method="_on_shakeTimer_timeout"]

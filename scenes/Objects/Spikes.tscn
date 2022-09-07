@@ -70,5 +70,3 @@ shape = SubResource( 1 )
 anims/RESET = SubResource( 3 )
 anims/off = SubResource( 4 )
 anims/on = SubResource( 2 )
-
-[connection signal="body_entered" from="." to="." method="_on_Spikes_body_entered"]

@@ -2,7 +2,7 @@
 
 [resource]
 resource_name = "shake"
-length = 0.3
+length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rotation_degrees")
 tracks/0/interp = 2

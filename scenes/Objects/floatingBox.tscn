@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/floatingBox2.gd" type="Script" id=1]
-[ext_resource path="res://sprites/Tile Sets/NES - Super Mario Bros - Tileset.png" type="Texture" id=3]
+[ext_resource path="res://sprites/Tile Sets/brickTileset.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 8, 8 )
@@ -32,29 +32,41 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 0, 0 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
 
 [sub_resource type="Animation" id=10]
 resource_name = "destroyed"
-length = 0.2
+length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
+tracks/0/path = NodePath("Sprite:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ 6 ]
+"values": [ true, false, true ]
 }
 
 [sub_resource type="Animation" id=13]
 resource_name = "hit"
-length = 0.4
+length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -89,12 +101,11 @@ shape = SubResource( 8 )
 one_way_collision_margin = 20.0
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 hframes = 2
-vframes = 4
 frame = 1
 region_enabled = true
-region_rect = Rect2( 0, 16, 33, 67 )
+region_rect = Rect2( 32, 48, 32, 16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"

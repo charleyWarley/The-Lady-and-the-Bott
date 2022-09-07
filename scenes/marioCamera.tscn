@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://marioCamera.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/marioCamera.gd" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=10]
 extents = Vector2( 12.4145, 159.026 )
@@ -9,7 +9,6 @@ extents = Vector2( 12.4145, 159.026 )
 position = Vector2( 17, 8 )
 smoothing_enabled = true
 script = ExtResource( 1 )
-target = NodePath("../lady")
 
 [node name="barrier" type="StaticBody2D" parent="."]
 position = Vector2( -159, 73 )

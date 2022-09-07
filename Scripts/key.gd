@@ -8,7 +8,7 @@ func _on_Area2D_body_entered(body):
 	if body.name == "lady": 
 		lady = body
 		print("door opened")
-		$Sprite/AnimationPlayer.play("open")
+		$AnimationPlayer.play("open")
 
 func _on_AnimationPlayer_animation_finished(anim_name): 
 	if anim_name == "open": lady.emit_signal("world_changed", location)

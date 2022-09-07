@@ -102,6 +102,7 @@ region_enabled = true
 region_rect = Rect2( 192, 96, 40, 16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+autoplay = "empty"
 anims/RESET = SubResource( 9 )
 anims/empty = SubResource( 1 )
 anims/four = SubResource( 3 )

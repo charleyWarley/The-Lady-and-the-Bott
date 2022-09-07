@@ -2,7 +2,6 @@ extends StaticBody2D
 
 func _ready():
 	add_to_group("hitable")
-	#add_to_group("breakable")
 	set_visible(false)
 
 func _on_VisibilityNotifier2D_screen_entered():
@@ -13,5 +12,5 @@ func _on_VisibilityNotifier2D_screen_exited():
 	self.set_visible(false)
 
 
-func hit(_power : int, _rightForce : bool):
+func take_damage(_power : int, _rightForce : bool):
 	queue_free()

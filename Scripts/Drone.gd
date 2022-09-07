@@ -10,7 +10,7 @@ onready var rightRay = $rightRay
 
 const SOUNDS = {
 	"zap1":
-preload("res://audio/elec.wav")
+preload("res://audio/sfx/elec.wav")
 }
 
 var target

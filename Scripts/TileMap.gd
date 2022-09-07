@@ -2,11 +2,13 @@ extends TileMap
 
 
 func _on_VisibilityNotifier2D_screen_entered():
-	visible = true
+	pass
+	#visible = true
 
 
 func _on_VisibilityNotifier2D_screen_exited():
-	visible = false
+	pass
+	#visible = false
 
 func _ready():
-	set_visible(false)
+	set_visible(true)

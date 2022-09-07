@@ -4,11 +4,11 @@ var strength = -350
 
 
 func _on_bounceSpot_body_entered(body):
-	if body.name == "lady": 
-		body.bounceForce.y = strength
-
+	match body.name:
+		"lady": body.bounceForce.y = strength
+		"bott": body.bounceForce.y = strength * 3
 
 func _on_bounceSpot_body_exited(body):
-	if body.name == "lady": 
-		print("bounced")
-		body.bounceForce.y = 0
+	match body.name:
+		"lady": body.bounceForce.y = 0
+		"bott": body.bounceForce.y = 0

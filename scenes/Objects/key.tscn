@@ -60,17 +60,18 @@ scale = Vector2( 0.3, 0.3 )
 script = ExtResource( 1 )
 location = "levelOne"
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Sprite")
+anims/RESET = SubResource( 12 )
+anims/close = SubResource( 13 )
+anims/open = SubResource( 14 )
+
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 2 )
 vframes = 2
 region_enabled = true
 region_rect = Rect2( 29, 99, 38, 120 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
-anims/RESET = SubResource( 12 )
-anims/close = SubResource( 13 )
-anims/open = SubResource( 14 )
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 5
@@ -88,5 +89,5 @@ margin_bottom = -17.0
 theme = ExtResource( 3 )
 text = "world"
 
-[connection signal="animation_finished" from="Sprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

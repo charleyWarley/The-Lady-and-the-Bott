@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scenes/Objects/hitSpark.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/UI/notification.tscn" type="PackedScene" id=2]
@@ -13,11 +13,12 @@
 [ext_resource path="res://sprites/Tile Sets/spriteTiles2.png" type="Texture" id=11]
 [ext_resource path="res://animations/side_hit.tres" type="Animation" id=12]
 [ext_resource path="res://animations/top_idle_down.tres" type="Animation" id=13]
+[ext_resource path="res://sprites/Tile Sets/8-bit-sprite-sheet.png" type="Texture" id=14]
 
 [sub_resource type="Animation" id=9]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -29,7 +30,7 @@ tracks/0/keys = {
 "values": [ 1 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("spriteGroup/upperSprite:frame")
+tracks/1/path = NodePath("32-bitSprite/upperSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -41,7 +42,7 @@ tracks/1/keys = {
 "values": [ 22 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("spriteGroup/upperSprite:position")
+tracks/2/path = NodePath("32-bitSprite/upperSprite:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -53,7 +54,7 @@ tracks/2/keys = {
 "values": [ Vector2( 1, -8 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("spriteGroup/lowerSprite:position")
+tracks/3/path = NodePath("32-bitSprite/lowerSprite:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -64,11 +65,47 @@ tracks/3/keys = {
 "update": 0,
 "values": [ Vector2( 0, 0 ) ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("8-bitSprite/lowerSprite:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("8-bitSprite/upperSprite:frame")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
 
 [sub_resource type="Animation" id=12]
-resource_name = "side_damage"
+resource_name = "damage"
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -80,7 +117,7 @@ tracks/0/keys = {
 "values": [ 32, 10, 17, 0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("spriteGroup/lowerSprite:visible")
+tracks/1/path = NodePath("32-bitSprite/lowerSprite:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -91,12 +128,36 @@ tracks/1/keys = {
 "update": 1,
 "values": [ true, false, true, false, true, false, true ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 32, 10, 17, 0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("8-bitSprite/lowerSprite:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4, 0.5, 0.6, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true, false, true, false, true ]
+}
 
 [sub_resource type="Animation" id=13]
-resource_name = "side_death"
+resource_name = "death"
 length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -108,23 +169,23 @@ tracks/0/keys = {
 "values": [ 32 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("spriteGroup/lowerSprite:position")
-tracks/1/interp = 2
+tracks/1/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, -2 ), Vector2( 0, 4 ) ]
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 32 ]
 }
 
 [sub_resource type="Animation" id=11]
-resource_name = "side_duck"
+resource_name = "duck"
 length = 0.4
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -135,11 +196,23 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 18 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 18 ]
+}
 
 [sub_resource type="Animation" id=15]
-resource_name = "side_look_up"
+resource_name = "look_up"
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -150,9 +223,21 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 3 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 3 ]
+}
 
 [sub_resource type="Animation" id=14]
-resource_name = "side_run"
+resource_name = "run"
 length = 0.6
 loop = true
 tracks/0/type = "method"
@@ -173,7 +258,7 @@ tracks/0/keys = {
 } ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/1/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -184,12 +269,24 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 8, 9, 10, 11, 13, 15 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 8, 9, 10, 11, 13, 15 ]
+}
 
 [sub_resource type="Animation" id=16]
-resource_name = "side_turn"
+resource_name = "turn"
 length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath("spriteGroup/lowerSprite:frame")
+tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -200,28 +297,42 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 40 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 40 ]
+}
 
 [node name="lady" type="KinematicBody2D"]
 collision_layer = 13
 collision_mask = 13
 script = ExtResource( 4 )
-spriteGroup = NodePath("spriteGroup")
-topSprite = NodePath("spriteGroup/upperSprite")
+spriteGroup32 = NodePath("32-bitSprite")
+spriteGroup8 = NodePath("8-bitSprite")
+topSprite32 = NodePath("32-bitSprite/upperSprite")
+topSprite8 = NodePath("8-bitSprite/upperSprite")
 sfx = NodePath("sfx/sfx")
 sfx2 = NodePath("sfx/sfx2")
-animPlayer = NodePath("AnimationPlayer")
+animPlayer = NodePath("sideAnimation")
 ray = NodePath("RayCast2D")
-pos2D = NodePath("Position2D")
+pickupSpot = NodePath("pickupSpot")
 hitSpark = ExtResource( 1 )
-notification = ExtResource( 2 )
+notif = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -0.262064, 2.01119 )
 shape = ExtResource( 9 )
 
-[node name="spriteGroup" type="Node2D" parent="."]
+[node name="32-bitSprite" type="Node2D" parent="."]
 
-[node name="lowerSprite" type="Sprite" parent="spriteGroup"]
+[node name="lowerSprite" type="Sprite" parent="32-bitSprite"]
 texture = ExtResource( 11 )
 hframes = 8
 vframes = 6
@@ -229,10 +340,26 @@ frame = 1
 region_enabled = true
 region_rect = Rect2( 0, 0, 128, 96 )
 
-[node name="upperSprite" type="Sprite" parent="spriteGroup"]
+[node name="upperSprite" type="Sprite" parent="32-bitSprite"]
 visible = false
 position = Vector2( 1, -8 )
 texture = ExtResource( 11 )
+region_enabled = true
+region_rect = Rect2( 96, 0, 16, 16 )
+
+[node name="8-bitSprite" type="Node2D" parent="."]
+
+[node name="lowerSprite" type="Sprite" parent="8-bitSprite"]
+texture = ExtResource( 14 )
+hframes = 8
+vframes = 6
+region_enabled = true
+region_rect = Rect2( 0, 0, 128, 96 )
+
+[node name="upperSprite" type="Sprite" parent="8-bitSprite"]
+visible = false
+position = Vector2( 1, -8 )
+texture = ExtResource( 14 )
 region_enabled = true
 region_rect = Rect2( 96, 0, 16, 16 )
 
@@ -250,31 +377,31 @@ enabled = true
 cast_to = Vector2( 10, 0 )
 collide_with_areas = true
 
-[node name="Position2D" type="Position2D" parent="."]
+[node name="pickupSpot" type="Position2D" parent="."]
 show_behind_parent = true
 position = Vector2( 9, 0 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="sideAnimation" type="AnimationPlayer" parent="."]
 autoplay = "top_idle_down"
 anims/RESET = SubResource( 9 )
-anims/side_damage = SubResource( 12 )
-anims/side_death = SubResource( 13 )
-anims/side_duck = SubResource( 11 )
-anims/side_fall = ExtResource( 5 )
-anims/side_grab = ExtResource( 7 )
-anims/side_hit = ExtResource( 12 )
-anims/side_idle = ExtResource( 8 )
-anims/side_jump = ExtResource( 10 )
-anims/side_look_up = SubResource( 15 )
-anims/side_run = SubResource( 14 )
-anims/side_turn = SubResource( 16 )
-anims/side_walk = ExtResource( 6 )
+anims/damage = SubResource( 12 )
+anims/death = SubResource( 13 )
+anims/duck = SubResource( 11 )
+anims/fall = ExtResource( 5 )
+anims/grab = ExtResource( 7 )
+anims/hit = ExtResource( 12 )
+anims/idle = ExtResource( 8 )
+anims/jump = ExtResource( 10 )
+anims/look_up = SubResource( 15 )
+anims/run = SubResource( 14 )
 anims/top_idle_down = ExtResource( 13 )
+anims/turn = SubResource( 16 )
+anims/walk = ExtResource( 6 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 position = Vector2( 1, 2.38419e-07 )
 scale = Vector2( 2, 2.4 )
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="sideAnimation" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="viewport_entered" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_entered"]
 [connection signal="viewport_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_exited"]

@@ -1,7 +1,7 @@
 extends Control
 
 const SONGS = {
-	"menuSong": preload("res://audio/music/song1.wav"),
+	"menuSong": preload("res://audio/music/4-channel-loop1.wav"),
 	"gameSong": preload("res://audio/music/ambience/Ambience1.wav")
 }
 
@@ -20,11 +20,11 @@ export(PackedScene) onready var levelOne
 export(PackedScene) onready var marioWorld
 
 onready var view = single.get_node("view")
-onready var camera = view.get_node("camera") setget set_camera, get_camera
+onready var camera = view.get_node("normalCamera") setget set_camera, get_camera
 export(NodePath) onready var HUD = get_node(HUD)
 
 var connected = false
-var bott
+var lady = preload("res://scenes/players/lady.tscn")
 var world setget set_world
 
 var isMusicPlaying = false
@@ -73,7 +73,7 @@ func _on_game_started(_players) -> void:
 
 
 func _on_world_changed(location):
-	camera.loading.set_visible(true)
+	#camera.loading.set_visible(true)
 	var movement
 	match location:
 		"overWorld": 
@@ -84,8 +84,8 @@ func _on_world_changed(location):
 		"levelOne": 
 			location = levelOne
 			movement = Global.moveTypes.SIDE
-			camera.maxLimit = Vector2(-270, 75)
-			camera.minLimit = Vector2(-915, -610)
+			camera.maxLimit = Vector2(1000000, 100000)
+			camera.minLimit = Vector2(-10000, -100000)
 		"marioWorld":
 			location = marioWorld
 			movement = Global.moveTypes.MARIO
@@ -96,11 +96,7 @@ func _on_world_changed(location):
 
 
 func _input(event) -> void:
-	if event is InputEventScreenTouch: #register a screen touch as ui_accept
-		if event.pressed: Input.action_press("ui_accept")
-		else: Input.action_release("ui_accept")
-	elif !event.is_action("pause") and !event.is_action("fullscreen") and !event.is_action("mute") and !event.is_action("crt"):
-		return
+	if not event is InputEventKey: return
 	if event.pressed:
 		if event.is_action("fullscreen"): 
 			OS.window_fullscreen = !OS.window_fullscreen
@@ -112,6 +108,10 @@ func _input(event) -> void:
 		elif event.is_action("mute"): 
 			mute()
 			return
+		elif event.is_action("graphics"):
+			change_graphics()
+			
+			return
 		if get_tree().is_paused():
 			if event.is_action("pause"):
 				unpause()
@@ -121,14 +121,24 @@ func _input(event) -> void:
 				pause()
 				return
 
+func change_graphics():
+	match Global.graphicStyle:
+		"8": Global.graphicStyle = "32"
+		"32": Global.graphicStyle = "8"
 
-func reset_game() -> void: wasReset = get_tree().reload_current_scene()
+func reset_game() -> void: 
+	unpause()
+	return
+	Global.camera.target = null
+	canPause = false
+	wasReset = get_tree().reload_current_scene()
+	
 
 
 func _ready() -> void:
 	change_HUD_visibility()
 	loading.set_visible(false)
-	mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
+	mainMenu.set_menu(mainMenu.inputMenu, mainMenu.startMenu)
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN) #hide the mouse
 	set_song("menuSong")
 	mainMenu.connect("game_started", self, "_on_game_started") #connect the game_started event to the _on_game_started function
@@ -136,7 +146,12 @@ func _ready() -> void:
 	pauseButtons.connect("crtButton_pressed", self, "set_crtVisibility")
 	pauseButtons.connect("quitButton_pressed", self, "reset_game")
 
-func _process(delta) -> void: if wasReset: mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
+func _process(_delta) -> void: 
+	if wasReset: 
+		wasReset = false
+		mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
+	if !camera.target: camera.target = Global.lady
+
 
 func pause() -> void:
 	if !canPause: return
@@ -169,10 +184,16 @@ func set_crtVisibility():
 
 func set_world(newLevel):
 	var level = newLevel.instance() #load the first level
+	if !Global.lady: 
+		Global.lady = lady.instance() 
+		Global.lady.connect("world_changed", self, "_on_world_changed")
 	if world != level: 
-		if world != null: world.queue_free()
+		if world != null: 
+			world.remove_child(Global.lady)
+			world.queue_free()
 		world = level
-	view.add_child(level)
+		world.add_child(Global.lady)
+		view.add_child(level)
 	set_camera(level)
 
 
@@ -187,10 +208,10 @@ func set_song(newSong):
 func set_camera(level):
 	if level.name != "superMarioBros":
 		camera.make_current()
+		Global.camera = camera
 		camera.set_zoom(Vector2(1,1))
-	Global.lady = level.get_node("lady") #set the camera to follow the lady
+	#set the camera to follow the lady
 	camera.target = Global.lady
-	if !connected: connected = Global.lady.connect("world_changed", self, "_on_world_changed")
 
 
 func get_camera(): return camera

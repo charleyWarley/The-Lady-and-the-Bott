@@ -7,18 +7,27 @@ const SOUNDS = {
 
 export(NodePath) onready var light = get_node(light) as Light2D
 export(NodePath) onready var collision = get_node(collision) as CollisionShape2D
-
+export(PackedScene) onready var collect_area
+export(NodePath) onready var pickupTimer = get_node(pickupTimer) as Timer
 onready var sfx = $sfx
+var area
 
 
-
-func _on_Area2D_body_entered(body):
+func _on_collectArea_body_entered(body):
 	if body.name != "lady": return
-	call_deferred("set_grabbed", body)
+	if body.pickup != null: return
+	body.call_deferred("pickup_item", self)
+	area.queue_free()
+	area = null
 	play_snd("pickup")
-	$collectArea.queue_free()
 
 func _ready():
+	var newArea = collect_area.instance() as Area2D
+	area = newArea
+	newArea.position = Vector2.ZERO
+	newArea.connect("body_entered", self, "_on_collectArea_body_entered")
+	add_child(newArea)
+	print(newArea.position, position)
 	add_to_group("boxes")
 	set_visible(true)
 	
@@ -30,13 +39,9 @@ func play_snd(snd) -> void:
 			sfx.play()
 
 
-
-func set_grabbed(body):
-	get_parent().remove_child(self)
-	body.pos2D.add_child(self)
-	set_mode(RigidBody2D.MODE_STATIC)
-	print(get_mode())
-	collision.set_disabled(true)
-	continuous_cd = RigidBody2D.CCD_MODE_DISABLED
-	rotation = 0
-	position = get_parent().position
+func _on_Timer_timeout():
+	var newArea = collect_area.instance()
+	area = newArea
+	newArea.connect("body_entered", self, "_on_collectArea_body_entered")	
+	newArea.position = Vector2.ZERO
+	add_child(newArea)
