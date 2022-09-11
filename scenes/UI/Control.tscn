@@ -12,7 +12,7 @@
 [ext_resource path="res://scenes/UI/timer.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/UI/multiView.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/UI/jumpGuage.tscn" type="PackedScene" id=12]
-[ext_resource path="res://audio/music/ambience/Ambience1.wav" type="AudioStream" id=15]
+[ext_resource path="res://audio/music/e-flat-arpeggio.wav" type="AudioStream" id=13]
 [ext_resource path="res://scenes/UI/abilityIcon.tscn" type="PackedScene" id=17]
 [ext_resource path="res://scenes/Levels/overWorld.tscn" type="PackedScene" id=18]
 [ext_resource path="res://sprites/loading.png" type="Texture" id=19]
@@ -106,10 +106,10 @@ position = Vector2( 119, 32 )
 [node name="audio" type="Node" parent="."]
 
 [node name="music" type="AudioStreamPlayer" parent="audio"]
-stream = ExtResource( 15 )
+stream = ExtResource( 13 )
 volume_db = -17.68
 pitch_scale = 0.84
-bus = "Normal"
+bus = "Music"
 
 [node name="sfx" type="AudioStreamPlayer" parent="audio"]
 

@@ -8,6 +8,9 @@ var jumps = 0
 var players = ""
 
 var lady
+var cards = []
+
+var isGraphicsSet := true
 
 var overWorld = null
 var levelOne = null

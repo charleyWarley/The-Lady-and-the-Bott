@@ -9,6 +9,8 @@ var health = 3
 
 onready var sprite = $Sprite
 onready var sfx = $sfx
+onready var collision = $CollisionShape2D
+onready var pickupTimer = $Timer
 
 func _on_VisibilityNotifier2D_screen_entered(): self.set_visible(true)
 func _on_VisibilityNotifier2D_screen_exited(): self.set_visible(false)
@@ -24,7 +26,7 @@ func _ready():
 
 func take_damage(power : int, rightForce : bool):
 	play_snd("hit")
-	var force = 70
+	var force = 70 * power
 	if rightForce: force = -force
 	apply_central_impulse(Vector2(force, 0))
 	health -= 1

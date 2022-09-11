@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/goomba.gd" type="Script" id=1]
-[ext_resource path="res://sprites/Tile Sets/spriteTiles2.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Tile Sets/32-bit-sprite-sheet-CHARACTERS.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=11]
 extents = Vector2( 7.99763, 7.9989 )
@@ -105,7 +105,7 @@ texture = ExtResource( 2 )
 flip_h = true
 hframes = 2
 region_enabled = true
-region_rect = Rect2( 80, 160, 32, 16 )
+region_rect = Rect2( 432, 32, 32, 16 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Sprite")

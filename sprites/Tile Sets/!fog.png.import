@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/NES - Super Mario Bros - Enemies & Bosses.png-4aaf96acab006558cee791d1d31f00d9.stex"
+path="res://.import/!fog.png-32ad81db2c07a17c1e80ec5c6a309e9e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/Tile Sets/NES - Super Mario Bros - Enemies & Bosses.png"
-dest_files=[ "res://.import/NES - Super Mario Bros - Enemies & Bosses.png-4aaf96acab006558cee791d1d31f00d9.stex" ]
+source_file="res://sprites/Tile Sets/!fog.png"
+dest_files=[ "res://.import/!fog.png-32ad81db2c07a17c1e80ec5c6a309e9e.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=false
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

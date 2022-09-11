@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://sprites/Tile Sets/32-bit-sprite-sheet-ENVIRONMENT.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/card.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 3, 4 )
+extents = Vector2( 5, 7 )
 
 [sub_resource type="Animation" id=2]
 length = 0.001
@@ -54,17 +54,21 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.085, 0.11 )
 texture = ExtResource( 1 )
+hframes = 5
+region_enabled = true
+region_rect = Rect2( 0, 256, 80, 16 )
 
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
 shape = SubResource( 1 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-position = Vector2( 2.38419e-07, -5.96046e-08 )
-scale = Vector2( 0.3, 0.4 )
+visible = false
+position = Vector2( -5.96046e-08, 1.19209e-07 )
+scale = Vector2( 0.5, 0.7 )
 
 [node name="sfx" type="AudioStreamPlayer" parent="."]
 

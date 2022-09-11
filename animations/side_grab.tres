@@ -4,7 +4,7 @@
 resource_name = "grab"
 length = 0.2
 tracks/0/type = "value"
-tracks/0/path = NodePath("32-bitSprite/lowerSprite:frame")
+tracks/0/path = NodePath("sideSprite/sprite32:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -13,10 +13,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 24, 25 ]
+"values": [ 27, 28 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("8-bitSprite/lowerSprite:frame")
+tracks/1/path = NodePath("sideSprite/sprite8:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -25,5 +25,5 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 24, 25 ]
+"values": [ 27, 28 ]
 }

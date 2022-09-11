@@ -2,7 +2,7 @@ extends Node2D
 
 const ICONS = {
 	"none": preload("res://sprites/icons/heart_empty.png"),
-	"reach": preload("res://sprites/icons/heart.png"),
+	"launch": preload("res://sprites/icons/heart.png"),
 	"hang": preload("res://sprites/icons/wand.png"),
 	"stomp": preload("res://sprites/icons/arrow_diamond.png")
 }
@@ -15,9 +15,9 @@ var curr_icon
 
 func check_icon():
 	print("check started")
-	match Abilities.ability:
+	match Abilities.current_ability:
 		Abilities.abilities.NONE: change_icon("none")
-		Abilities.abilities.REACH: change_icon("reach")
+		Abilities.abilities.LAUNCH: change_icon("launch")
 		Abilities.abilities.HANG: change_icon("hang")
 		Abilities.abilities.STOMP: change_icon("stomp")
 

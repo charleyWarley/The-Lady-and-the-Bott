@@ -7,10 +7,10 @@ var canNotify = false
 
 
 
-func _process(delta):
+func _process(_delta):
 	if canNotify:
 		tween.interpolate_property(self, "position", position, destination, 1, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)	
 		tween.start()
 
-func _on_Tween_tween_completed(object, key):
+func _on_Tween_tween_completed(_object, _key):
 	queue_free()

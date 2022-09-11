@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/SNES - Super Mario World - Yoshis Island 1.png-bcccfe3e4380eae5fa5294cdfb953882.stex"
+path="res://.import/sora.png-cb439448a9d6ab6aa199e834f7e97336.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/Tile Sets/SNES - Super Mario World - Yoshis Island 1.png"
-dest_files=[ "res://.import/SNES - Super Mario World - Yoshis Island 1.png-bcccfe3e4380eae5fa5294cdfb953882.stex" ]
+source_file="res://sprites/Tile Sets/sora.png"
+dest_files=[ "res://.import/sora.png-cb439448a9d6ab6aa199e834f7e97336.stex" ]
 
 [params]
 

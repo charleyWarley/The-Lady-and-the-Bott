@@ -19,16 +19,10 @@ func _on_star_collected(ability):
 	print(ability)
 	shake(100)
 
-func shake(new_shake, shake_time = 0.4, shake_limit = 100):
-	return
+func shake(new_shake, _shake_time = 0.4, _shake_limit = 100):
 	shakeAmount += new_shake
-	if shakeAmount > shake_limit:
-		shakeAmount = shake_limit
-	shakeTimer.wait_time = shake_time
-	tween.stop_all()
-	set_process(true)
-	shakeTimer.start()
 	print("camera should shake with ", shakeAmount, " intensity")
+	shakeAmount = 0
 
 func _ready():
 	set_process(false)
@@ -64,7 +58,7 @@ func set_targetPosition():
 	if targetPosition.y < minLimit.y: targetPosition.y = minLimit.y
 	if targetPosition.y > maxLimit.y: targetPosition.y = maxLimit.y
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_pressed("zoom"): zoom = Vector2(20,20)
 	if Input.is_action_just_released("zoom"): zoom = Vector2(1,1)	
 

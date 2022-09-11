@@ -9,7 +9,9 @@ var screenSize
 onready var target = Global.lady
 
 
-func _ready(): screenSize = self.get_viewport_rect().size
+func _ready(): 
+	make_current()
+	screenSize = self.get_viewport_rect().size
 
 
 func _process(_delta): update_camera(target.get_global_position())

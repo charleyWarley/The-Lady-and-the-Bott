@@ -1,12 +1,12 @@
 extends Node
 
-enum abilities { NONE, REACH, HANG, STOMP }
-var ability = abilities.NONE
+enum abilities { NONE, LAUNCH, HANG, TRANSLATE }
+var current_ability = abilities.NONE
 
-var canReach := false
+var canLaunch := false
 var canHang := false
-var canStomp := false
-var isStomping := false
+var canTranslate := false
+var isTranslateing := false
 var isHanging := false
 var isGrabbing := false
 
@@ -14,22 +14,23 @@ var isHitting := false
 var hasTool := false
 
 
-func change_ability():
-	match ability:
+
+func change_current_ability() -> void:
+	match current_ability:
 		abilities.NONE: 
-			if canReach: ability = abilities.REACH
-			elif canHang: ability = abilities.HANG
-			elif canStomp: ability = abilities.STOMP
+			if canLaunch: current_ability = abilities.LAUNCH
+			elif canHang: current_ability = abilities.HANG
+			elif canTranslate: current_ability = abilities.TRANSLATE
 			else: print("no abilities available")
-		abilities.REACH:
-			if canHang: ability = abilities.HANG
-			elif canStomp: ability = abilities.STOMP
-			else: print("REACH")
+		abilities.LAUNCH:
+			if canHang: current_ability = abilities.HANG
+			elif canTranslate: current_ability = abilities.TRANSLATE
+			else: print("LAUNCH")
 		abilities.HANG:
-			if canStomp: ability = abilities.STOMP
-			elif canReach: ability = abilities.REACH
+			if canTranslate: current_ability = abilities.TRANSLATE
+			elif canLaunch: current_ability = abilities.LAUNCH
 			else: print("HANG")
-		abilities.STOMP:
-			if canReach: ability = abilities.REACH
-			elif canReach: ability = abilities.HANG
-			else: print("STOMP")
+		abilities.TRANSLATE:
+			if canLaunch: current_ability = abilities.LAUNCH
+			elif canLaunch: current_ability = abilities.HANG
+			else: print("TRANSLATE")

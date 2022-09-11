@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
 [sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 2.5, 4.5 )
 
 [node name="collectArea" type="Area2D"]
 

@@ -15,7 +15,7 @@ var area
 
 func _on_collectArea_body_entered(body):
 	if body.name != "lady": return
-	if body.pickup != null: return
+	if body.items_in_hand != []: return
 	body.call_deferred("pickup_item", self)
 	area.queue_free()
 	area = null
@@ -27,7 +27,6 @@ func _ready():
 	newArea.position = Vector2.ZERO
 	newArea.connect("body_entered", self, "_on_collectArea_body_entered")
 	add_child(newArea)
-	print(newArea.position, position)
 	add_to_group("boxes")
 	set_visible(true)
 	

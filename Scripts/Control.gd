@@ -1,8 +1,11 @@
 extends Control
 
 const SONGS = {
-	"menuSong": preload("res://audio/music/4-channel-loop1.wav"),
-	"gameSong": preload("res://audio/music/ambience/Ambience1.wav")
+	"menuSong": preload("res://audio/music/e-flat-arpeggio.wav"),
+	"gameSong": preload("res://audio/music/4-channel-loop1.wav"),
+	"gameSong2": preload("res://audio/music/song1.wav"),
+	"gameSong3": preload("res://audio/music/song2.wav"),
+	
 }
 
 export(NodePath) onready var music = get_node(music) as AudioStreamPlayer
@@ -30,22 +33,25 @@ var world setget set_world
 var isMusicPlaying = false
 var canPause = false
 var firstWorld setget set_firstWorld
-var wasReset = false
+
 
 func set_firstWorld(location):
 	var movement
 	match location:
 		"overWorld": 
+			set_song("gameSong2")
 			location = overWorld
 			movement = Global.moveTypes.TOP
 			camera.maxLimit = Vector2(1900, 700)
 			camera.minLimit = Vector2(-150, -150)
 		"levelOne": 
+			set_song("gameSong3")
 			location = levelOne
 			movement = Global.moveTypes.SIDE
-			camera.minLimit = Vector2(0, 0)
-			camera.maxLimit = Vector2(850, 950)
+			camera.maxLimit = Vector2(1000000, 100000)
+			camera.minLimit = Vector2(-10000, -100000)
 		"marioWorld":
+			set_song("gameSong")
 			location = marioWorld
 			movement = Global.moveTypes.MARIO
 			camera.maxLimit = Vector2(3200, 150)
@@ -65,7 +71,7 @@ func change_HUD_visibility():
 func _on_game_started(_players) -> void:
 	change_HUD_visibility()
 	canPause = true
-	set_song("gameSong")
+	set_song("gameSong2")
 	Global.set_deferred("moveType", Global.moveTypes.TOP)
 	Global.players = ("single")
 	mainMenu.queue_free() #clear the title screen
@@ -77,16 +83,19 @@ func _on_world_changed(location):
 	var movement
 	match location:
 		"overWorld": 
+			set_song("gameSong2")
 			location = overWorld
 			movement = Global.moveTypes.TOP
 			camera.maxLimit = Vector2(1900, 700)
 			camera.minLimit = Vector2(-150, -150)
 		"levelOne": 
+			set_song("gameSong3")
 			location = levelOne
 			movement = Global.moveTypes.SIDE
 			camera.maxLimit = Vector2(1000000, 100000)
 			camera.minLimit = Vector2(-10000, -100000)
 		"marioWorld":
+			set_song("gameSong")
 			location = marioWorld
 			movement = Global.moveTypes.MARIO
 			camera.maxLimit = Vector2(3200, 150)
@@ -122,16 +131,15 @@ func _input(event) -> void:
 				return
 
 func change_graphics():
+	Global.isGraphicsSet = false
 	match Global.graphicStyle:
 		"8": Global.graphicStyle = "32"
 		"32": Global.graphicStyle = "8"
 
 func reset_game() -> void: 
-	unpause()
-	return
 	Global.camera.target = null
 	canPause = false
-	wasReset = get_tree().reload_current_scene()
+	get_tree().quit()
 	
 
 
@@ -147,9 +155,6 @@ func _ready() -> void:
 	pauseButtons.connect("quitButton_pressed", self, "reset_game")
 
 func _process(_delta) -> void: 
-	if wasReset: 
-		wasReset = false
-		mainMenu.set_menu(mainMenu.options_buttons, mainMenu.main_buttons)
 	if !camera.target: camera.target = Global.lady
 
 

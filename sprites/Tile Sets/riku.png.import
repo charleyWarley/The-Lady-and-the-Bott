@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/NES - Super Mario Bros - Item and Brick Blocks.png-34ae8610e208f14bef2bbc0c8bc18100.stex"
+path="res://.import/riku.png-a27ca134dd19040a8595d7a2240acc75.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/Tile Sets/NES - Super Mario Bros - Item and Brick Blocks.png"
-dest_files=[ "res://.import/NES - Super Mario Bros - Item and Brick Blocks.png-34ae8610e208f14bef2bbc0c8bc18100.stex" ]
+source_file="res://sprites/Tile Sets/riku.png"
+dest_files=[ "res://.import/riku.png-a27ca134dd19040a8595d7a2240acc75.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
@@ -31,5 +31,5 @@ process/invert_color=false
 process/normal_map_invert_y=false
 stream=false
 size_limit=0
-detect_3d=false
+detect_3d=true
 svg/scale=1.0

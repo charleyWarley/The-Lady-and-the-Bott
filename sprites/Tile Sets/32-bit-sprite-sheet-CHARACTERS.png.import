@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/NES - Super Mario Bros - Tileset.png-a0e546ee0888d859e2d8d1ed4d6d7d6c.stex"
+path="res://.import/32-bit-sprite-sheet-CHARACTERS.png-1d393f65c2f91ae2eaabdbf86826680d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/Tile Sets/NES - Super Mario Bros - Tileset.png"
-dest_files=[ "res://.import/NES - Super Mario Bros - Tileset.png-a0e546ee0888d859e2d8d1ed4d6d7d6c.stex" ]
+source_file="res://sprites/Tile Sets/32-bit-sprite-sheet-CHARACTERS.png"
+dest_files=[ "res://.import/32-bit-sprite-sheet-CHARACTERS.png-1d393f65c2f91ae2eaabdbf86826680d.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=false
-flags/mipmaps=false
+flags/mipmaps=true
 flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true

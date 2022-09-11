@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/Objects/coin.tscn" type="PackedScene" id=1]
-[ext_resource path="res://sprites/Tile Sets/NES - Super Mario Bros - Tileset.png" type="Texture" id=2]
+[ext_resource path="res://sprites/Tile Sets/32-bit-sprite-sheet-ENVIRONMENT.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/coinBox2.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/secretbreakArea.gd" type="Script" id=4]
 
@@ -85,7 +85,6 @@ tracks/0/keys = {
 }
 
 [node name="sixCoinBox" type="StaticBody2D"]
-position = Vector2( 216, 40 )
 script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -96,10 +95,9 @@ one_way_collision_margin = 20.0
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -3 )
 texture = ExtResource( 2 )
-hframes = 3
-frame = 2
+hframes = 2
 region_enabled = true
-region_rect = Rect2( 17, 16, 51, 16 )
+region_rect = Rect2( 8, 8, 32, 16 )
 
 [node name="secretbreakArea" type="Area2D" parent="."]
 script = ExtResource( 4 )

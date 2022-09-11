@@ -49,11 +49,12 @@ var isFull := false
 var isEmpty := true
 var isGrounded := false
 var isDamaged := false
+var direction : Vector2
 
-export(PackedScene) onready var spark
+#export(PackedScene) onready var spark
 export(NodePath) onready var animPlayer = get_node(animPlayer)
 export(NodePath) onready var ray = get_node(ray)
-export(PackedScene) onready var fire
+#export(PackedScene) onready var fire
 export(NodePath) onready var sfx = get_node(sfx)
 export(NodePath) onready var sprite32 = get_node(sprite32) as Sprite
 export(NodePath) onready var sprite8 = get_node(sprite8) as Sprite
@@ -68,7 +69,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _ready() -> void:
 	add_to_group("buddy")
-	play_anim("reveal")
+	if !name.begins_with("sora"): play_anim("reveal")
 	connect("damage_taken", self, "_on_damage_taken")
 
 
@@ -96,11 +97,11 @@ func _physics_process(delta) -> void:
 		if collider.is_in_group("boxes"): collider.destroy()
 	elif !ray.get_collider(): isGrounded = false
 	if isGrounded and !wasGrounded: canDoubleJump = true
-	if Input.is_action_just_pressed("ali_down"): make_spark()
-	var direction = check_direction()
-	set_velocity(direction, delta)
-	check_flip(direction)
-	anim_check(direction)
+#	if Input.is_action_just_pressed("ali_down"): make_spark()
+	check_direction()
+	set_velocity(delta)
+	check_flip()
+	anim_check()
 	check_sprite()
 	wasGrounded = isGrounded
 
@@ -108,31 +109,31 @@ func _physics_process(delta) -> void:
 func check_sprite():
 	match Global.graphicStyle:
 		"8": 
-			$Sprite8.set_visible(true)
-			$Sprite32.set_visible(false)
+			sprite8.set_visible(true)
+			sprite32.set_visible(false)
 		"32": 
-			$Sprite32.set_visible(true)
-			$Sprite8.set_visible(false)
+			sprite32.set_visible(true)
+			sprite8.set_visible(false)
 			
-func check_flip(direction):
+func check_flip():
 	if direction.x > 0.0 and !isFlipped:  flip()
 	elif direction.x < 0.0 and isFlipped: flip()
 
 
-func set_velocity(direction, delta):
+func set_velocity(delta):
 	velocity += direction.normalized() * speed
 	if Global.moveType == Global.moveTypes.SIDE or Global.moveType == Global.moveTypes.MARIO: 
 		velocity = Vector2(check_x(delta), check_y())
 	elif Global.moveType == Global.moveTypes.TOP: 
 		pass
-	var targetVelocity = get_target_velocity(direction)
+	var targetVelocity = get_target_velocity()
 	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
 	velocity = velocity + bounceForce
 	apply_central_impulse(velocity)
 	bounceForce = Vector2.ZERO
 	
 	
-func get_target_velocity(direction) -> Vector2:
+func get_target_velocity() -> Vector2:
 	if direction.x == 0:
 		if velocity.x > -10 and velocity.x < 10: velocity.x = 0
 	return velocity
@@ -170,6 +171,7 @@ func check_jump():
 	var pressedJump = Input.is_action_just_pressed("ali_jump")
 	var releasedJump = Input.is_action_just_released("ali_jump")
 	if pressedJump:
+		print("jump")
 		timePressedJump = get_cur_time()
 		if isGrounded: 
 			if !isDamaged:
@@ -195,7 +197,7 @@ func jump() -> void:
 			canDoubleJump = true
 			velocity.y = jump_power.FIRST
 			play_snd("jump1")
-			emit()
+			#emit()
 		elif canDoubleJump:
 			print("second jump")
 			canDoubleJump = false
@@ -209,17 +211,17 @@ func jump() -> void:
 	if !isGrounded and wasGrounded: timeLeftGround = get_cur_time()
 
 
-func make_spark() -> void:
-	if energy == 0: return
-	var newSpark : Node2D = spark.instance()
-	get_parent().add_child(newSpark)
-	newSpark.position = position
-	newSpark.get_child(0).set_emitting(true)
-	sparks += 1
-	if sparks == 2: 
-		energy -= 1
-		sparks = 0
-	if energy < 0: energy = 0
+#func make_spark() -> void:
+	#if energy == 0: return
+	#var newSpark : Node2D = spark.instance()
+	#get_parent().add_child(newSpark)
+	#newSpark.position = position
+	#newSpark.get_child(0).set_emitting(true)
+	#sparks += 1
+	#if sparks == 2: 
+	#	energy -= 1
+	#	sparks = 0
+#	if energy < 0: energy = 0
 
 
 func get_cur_time() -> float:
@@ -227,14 +229,16 @@ func get_cur_time() -> float:
 	return time
 
 
-func check_direction() -> Vector2:
-	var move = Vector2()
-	if Input.is_action_pressed("ali_left"): move.x = -1
-	elif Input.is_action_pressed("ali_right"): move.x = 1
-	if Input.is_action_just_released("ali_left") or Input.is_action_just_pressed("ali_right"): move.x = 0
-	move = move.normalized()
-	return move
-
+func check_direction():
+	if Input.is_action_pressed("ali_left"): direction.x = -1
+	if Input.is_action_pressed("ali_right"): direction.x = 1
+	if Global.moveType == Global.moveTypes.TOP:
+		if Input.is_action_pressed("ali_down"): direction.y = 1
+		if Input.is_action_pressed("ali_up"): direction.y = -1
+	else:
+		direction.y = 0
+	if Input.is_action_just_released("ali_left") or Input.is_action_just_released("ali_right"): direction.x = 0
+	direction = direction.normalized()
 
 func flip() -> void:
 	sprite8.flip_h = !sprite8.flip_h
@@ -254,15 +258,30 @@ func energy_check() -> void:
 			isFull = true
 
 
-func anim_check(move) -> void:
+func anim_check() -> void:
 	if !isRevealed or isInvinsible: return
+	if name.begins_with("sora"): 
+		print("sora")
+		if direction.x > 0:
+			if direction.y > 0: play_anim("walk_DownRight")
+			elif direction.y < 0: play_anim("walk_UpRight")
+			elif direction.y == 0: play_anim("walk_DownRight")
+		elif direction.x < 0:
+			if direction.y > 0: play_anim("walk_DownLeft")
+			elif direction.y < 0: play_anim("walk_UpLeft")
+			elif direction.y == 0: play_anim("walk_DownLeft")
+		elif direction.x == 0:
+			if direction.y > 0: play_anim("walk_DownLeft")
+			elif direction.y < 0: play_anim("walk_UpRight")
+			elif direction.y == 0: play_anim("idle")
+			return
 	if isDamaged:
 		isInvinsible = true
 		play_anim("damage_taken")
 		print("invinsibility started")
 		return
 	elif isGrounded and !isDamaged:
-		if move == Vector2(): play_anim("idle")
+		if direction == Vector2(): play_anim("idle")
 		else: play_anim("walk")
 	elif velocity.y < 0: play_anim("jump")
 	elif velocity.y > 0: play_anim("fall")
@@ -279,11 +298,11 @@ func play_anim(anim) -> void:
 	animPlayer.play(anim)
 
 
-func emit() -> void:
-	var newFire = fire.instance()
-	get_parent().add_child(newFire)
-	newFire.position = position + Vector2(0, 5)
-	newFire.emitting = !newFire.emitting
+#func emit() -> void:
+#	var newFire = fire.instance()
+#	get_parent().add_child(newFire)
+#	newFire.position = position + Vector2(0, 5)
+#	newFire.emitting = !newFire.emitting
 
 
 
