@@ -69,7 +69,6 @@ scale = Vector2( 3.25, 3.15 )
 
 [node name="sfx2" type="AudioStreamPlayer" parent="audio"]
 
-[connection signal="button_up" from="startMenu/vBoxContainer/newGame" to="." method="_on_newGame_button_up"]
 [connection signal="screen_entered" from="startMenu/VisibilityNotifier2D" to="startMenu" method="_on_VisibilityNotifier2D_screen_entered"]
 [connection signal="screen_exited" from="startMenu/VisibilityNotifier2D" to="startMenu" method="_on_VisibilityNotifier2D_screen_exited"]
 [connection signal="screen_entered" from="inputOptions/VisibilityNotifier2D" to="inputOptions" method="_on_VisibilityNotifier2D_screen_entered"]

@@ -44,7 +44,8 @@ func _ready():
 	set_button(newGame, newGame)
 	
 
-func _process(_delta):
+func _input(event):
+	if not event is InputEventKey: return
 	#check menu inputs
 	match menu:
 		"main": check_main_menu()
@@ -53,44 +54,6 @@ func _process(_delta):
 func check_options_menu():
 	return
 
-#func check_lang_menu():
-#	if Input.is_action_just_released("ui_down"):
-#		play_snd("switchUI")
-#		if en.is_pressed():
-#			set_button(en, de)
-#		elif de.is_pressed():
-#			set_button(de, ja)
-#		elif ja.is_pressed():
-#			set_button(ja, ro)
-#		else: en.set_pressed(true)
-#	elif Input.is_action_just_released("ui_up"):
-#		play_snd("switchUI")
-#		if ro.is_pressed():
-#			set_button(ro, ja)
-#		elif ja.is_pressed():
-#			set_button(ja, de)
-#		elif de.is_pressed():
-#			set_button(de, en)
-#		else: en.set_pressed(true)
-#	elif Input.is_action_just_released("ui_accept"):
-#		play_snd("selectUI")
-#		if en.is_pressed():
-#			en.set_pressed(false)
-#			TranslationServer.set_locale("en")
-#		elif de.is_pressed():
-#			de.set_pressed(false)
-#			TranslationServer.set_locale("de")
-#		elif ja.is_pressed():
-#			ja.set_pressed(false)
-#			TranslationServer.set_locale("ja")
-#		elif ro.is_pressed():
-#			ro.set_pressed(false)
-#			TranslationServer.set_locale("ro")
-#		else:
-#			print("idk what to do ")
-#		set_menu(options_buttons, startMenu)
-#		menu = "main"
-#		newGame.set_pressed(true)
 
 func check_input_menu():
 	if Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_up"): 

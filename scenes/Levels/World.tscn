@@ -1,7 +1,9 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=21 format=2]
 
+[ext_resource path="res://gravityShift.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Objects/card.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/players/bott.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/Objects/translatable.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/Objects/Spikes.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Objects/Power_Zone.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/Objects/floatingBox.tscn" type="PackedScene" id=7]
@@ -27,6 +29,9 @@ startPosition = NodePath("setting/Environment/startPosition")
 
 [node name="Objects" type="Node" parent="setting"]
 
+[node name="translatable" parent="setting/Objects" instance=ExtResource( 4 )]
+position = Vector2( -890, -543 )
+
 [node name="Orbs" type="Node" parent="setting/Objects"]
 
 [node name="Orb1" parent="setting/Objects/Orbs" instance=ExtResource( 8 )]
@@ -45,7 +50,7 @@ position = Vector2( -691, -461 )
 
 [node name="Power_Zone" parent="setting/Objects/powerZones" instance=ExtResource( 6 )]
 position = Vector2( -720, -535 )
-ability = "hang"
+ability = "translate"
 
 [node name="Power_Zone2" parent="setting/Objects/powerZones" instance=ExtResource( 6 )]
 position = Vector2( -622, -39 )
@@ -77,7 +82,7 @@ position = Vector2( -979, -472 )
 contents = ExtResource( 8 )
 
 [node name="crate9" parent="setting/Objects" instance=ExtResource( 10 )]
-position = Vector2( -965, -541 )
+position = Vector2( -619, -425 )
 contents = ExtResource( 3 )
 
 [node name="crate10" parent="setting/Objects" instance=ExtResource( 10 )]
@@ -110,7 +115,7 @@ position = Vector2( -499, -574 )
 position = Vector2( -569, -336 )
 
 [node name="crate2" parent="setting/Objects" instance=ExtResource( 10 )]
-position = Vector2( -841, -536 )
+position = Vector2( -901, -471 )
 
 [node name="crate3" parent="setting/Objects" instance=ExtResource( 10 )]
 position = Vector2( -920, -416 )
@@ -173,6 +178,22 @@ position = Vector2( -745, 58 )
 position = Vector2( -729, 58 )
 
 [node name="Environment" type="Node" parent="setting"]
+
+[node name="gravityShift" parent="setting/Environment" instance=ExtResource( 1 )]
+
+[node name="fakeWalls" type="Node" parent="setting/Environment"]
+
+[node name="fakeWall" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
+position = Vector2( -598, -261 )
+
+[node name="fakeWall2" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
+position = Vector2( -598, -277 )
+
+[node name="fakeWall3" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
+position = Vector2( -712, -84 )
+
+[node name="fakeWall4" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
+position = Vector2( -712, -100 )
 
 [node name="tileMap" type="Node" parent="setting/Environment"]
 
@@ -299,22 +320,8 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="fakeWalls" type="Node" parent="setting/Environment"]
-
-[node name="fakeWall" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
-position = Vector2( -598, -261 )
-
-[node name="fakeWall2" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
-position = Vector2( -598, -277 )
-
-[node name="fakeWall3" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
-position = Vector2( -712, -84 )
-
-[node name="fakeWall4" parent="setting/Environment/fakeWalls" instance=ExtResource( 15 )]
-position = Vector2( -712, -100 )
-
-[node name="key" parent="setting/Environment" instance=ExtResource( 22 )]
-position = Vector2( -804, 88 )
+[node name="door" parent="setting/Environment" instance=ExtResource( 22 )]
+position = Vector2( -676, 80 )
 location = "marioWorld"
 
 [node name="bounceSpot" parent="setting/Environment" instance=ExtResource( 13 )]
@@ -332,7 +339,7 @@ position = Vector2( -1001, -546 )
 position = Vector2( -479, -389 )
 
 [node name="Spikes3" parent="setting/Environment/Spikes" instance=ExtResource( 5 )]
-position = Vector2( -900, -533 )
+position = Vector2( -995, -293 )
 
 [node name="Spikes2" parent="setting/Environment/Spikes" instance=ExtResource( 5 )]
 position = Vector2( -413, -388 )

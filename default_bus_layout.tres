@@ -1,4 +1,7 @@
-[gd_resource type="AudioBusLayout" load_steps=4 format=2]
+[gd_resource type="AudioBusLayout" load_steps=5 format=2]
+
+[sub_resource type="AudioEffectLowPassFilter" id=7]
+resource_name = "LowPassFilter"
 
 [sub_resource type="AudioEffectPhaser" id=4]
 resource_name = "Phaser"
@@ -10,7 +13,9 @@ resource_name = "Reverb"
 resource_name = "Distortion"
 
 [resource]
-bus/0/volume_db = -0.328256
+bus/0/volume_db = -5.04224
+bus/0/effect/0/effect = SubResource( 7 )
+bus/0/effect/0/enabled = true
 bus/1/name = "Normal"
 bus/1/solo = false
 bus/1/mute = false

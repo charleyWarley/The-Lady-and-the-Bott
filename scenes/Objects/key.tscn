@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Scripts/key.gd" type="Script" id=1]
 [ext_resource path="res://sprites/Tile Sets/Pixel Art Top Down - Basic/Texture/TX Props.png" type="Texture" id=2]
-[ext_resource path="res://fonts/tutorialTheme.tres" type="Theme" id=3]
+[ext_resource path="res://scenes/Objects/ingame.tres" type="Theme" id=3]
 
 [sub_resource type="Animation" id=12]
 length = 0.001
@@ -52,11 +52,9 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=15]
-extents = Vector2( 25, 28.3333 )
+extents = Vector2( 11.5385, 11.9583 )
 
-[node name="key" type="Node2D"]
-position = Vector2( 22, 140 )
-scale = Vector2( 0.3, 0.3 )
+[node name="door" type="Node2D"]
 script = ExtResource( 1 )
 location = "levelOne"
 
@@ -67,27 +65,28 @@ anims/close = SubResource( 13 )
 anims/open = SubResource( 14 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 1.5, 1.5 )
+scale = Vector2( 0.65, 0.8 )
 texture = ExtResource( 2 )
 vframes = 2
 region_enabled = true
 region_rect = Rect2( 29, 99, 38, 120 )
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="Sprite"]
 collision_layer = 5
 collision_mask = 5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( -1.66666, 8.33334 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Area2D"]
+position = Vector2( -0.769231, 11.9583 )
 shape = SubResource( 15 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = -26.6667
-margin_top = -40.0
-margin_right = 28.3333
+margin_left = -16.0
+margin_top = -27.0
+margin_right = 4.0
 margin_bottom = -17.0
+size_flags_horizontal = 0
 theme = ExtResource( 3 )
 text = "world"
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="Sprite/Area2D" to="." method="_on_Area2D_body_entered"]

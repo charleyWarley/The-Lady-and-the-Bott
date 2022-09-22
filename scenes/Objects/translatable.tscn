@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/Objects/ingame.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/Objects/translatable.gd" type="Script" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 28, 12.5 )
+
+[node name="translatable" type="Node2D"]
+script = ExtResource( 4 )
+grhazan = "johdizitzïn hhad"
+translated = "do not eat"
+label = NodePath("Label")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 26, 5.5 )
+shape = SubResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 51.0
+margin_bottom = 14.0
+theme = ExtResource( 1 )
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

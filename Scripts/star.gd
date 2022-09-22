@@ -15,7 +15,7 @@ func _on_Area2D_body_entered(body):
 	if body.name != "lady": return
 	match ability:
 		"hang": Abilities.canHang = true
-		"stomp": Abilities.canStomp = true
+		"translate": Abilities.canTranslate = true
 		"launch": Abilities.canLaunch = true
 	Global.orbs += 20
 	play_anim("star_collected")

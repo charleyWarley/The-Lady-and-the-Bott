@@ -2039,7 +2039,7 @@ topSprites = NodePath("topSprite")
 sfx = NodePath("sfx/sfx")
 sfx2 = NodePath("sfx/sfx2")
 animPlayer = NodePath("sideAnimation")
-ray = NodePath("RayCast2D")
+ray = NodePath("bodyRay")
 pickupSpot = NodePath("pickupSpot")
 hitSpark = ExtResource( 1 )
 notif = ExtResource( 2 )
@@ -2072,7 +2072,6 @@ region_enabled = true
 region_rect = Rect2( 0, 0, 128, 96 )
 
 [node name="topSprite" type="Node2D" parent="."]
-visible = false
 
 [node name="sprite8" type="Sprite" parent="topSprite"]
 texture = ExtResource( 14 )
@@ -2088,7 +2087,7 @@ vframes = 7
 region_enabled = true
 region_rect = Rect2( 240, 0, 144, 168 )
 
-[node name="sfx" type="Node2D" parent="."]
+[node name="sfx" type="Node" parent="."]
 
 [node name="sfx" type="AudioStreamPlayer" parent="sfx"]
 stream = ExtResource( 3 )
@@ -2096,7 +2095,7 @@ stream = ExtResource( 3 )
 [node name="sfx2" type="AudioStreamPlayer" parent="sfx"]
 stream = ExtResource( 3 )
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="bodyRay" type="RayCast2D" parent="."]
 position = Vector2( 0, 4 )
 enabled = true
 cast_to = Vector2( 10, 0 )

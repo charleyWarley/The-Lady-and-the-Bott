@@ -58,6 +58,8 @@ func set_firstWorld(location):
 			camera.minLimit = Vector2(-150, -500)
 	set_deferred("world", location)
 	Global.set_deferred("moveType", movement)
+	if Global.lady: Global.lady.call_deferred("reset_speed")
+	
 
 #restart the level when finished (for unfinished game only)
 func _on_level_exited(_body) -> void: reset_game()
@@ -81,6 +83,7 @@ func _on_game_started(_players) -> void:
 func _on_world_changed(location):
 	#camera.loading.set_visible(true)
 	var movement
+	
 	match location:
 		"overWorld": 
 			set_song("gameSong2")
@@ -102,7 +105,8 @@ func _on_world_changed(location):
 			camera.minLimit = Vector2(-150, -500)
 	set_deferred("world", location)
 	Global.set_deferred("moveType", movement)
-
+	if Global.lady: Global.lady.call_deferred("reset_speed")
+	
 
 func _input(event) -> void:
 	if not event is InputEventKey: return
@@ -147,7 +151,7 @@ func _ready() -> void:
 	change_HUD_visibility()
 	loading.set_visible(false)
 	mainMenu.set_menu(mainMenu.inputMenu, mainMenu.startMenu)
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN) #hide the mouse
+	#Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN) #hide the mouse
 	set_song("menuSong")
 	mainMenu.connect("game_started", self, "_on_game_started") #connect the game_started event to the _on_game_started function
 	pauseButtons.connect("musicButton_pressed", self, "mute")

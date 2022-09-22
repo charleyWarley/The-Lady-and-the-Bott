@@ -1,0 +1,20 @@
+[gd_resource type="Theme" load_steps=5 format=2]
+
+[ext_resource path="res://fonts/GnuUnifontFull-Pm9P.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://sprites/icons/heart_empty.png" type="Texture" id=2]
+[ext_resource path="res://sprites/icons/heart.png" type="Texture" id=3]
+
+[sub_resource type="DynamicFont" id=2]
+size = 8
+outline_size = 1
+outline_color = Color( 0.211765, 0.0705882, 0.215686, 1 )
+use_mipmaps = true
+font_data = ExtResource( 1 )
+
+[resource]
+default_font = SubResource( 2 )
+Button/colors/font_color = Color( 0.882353, 0.713726, 0.866667, 1 )
+Button/colors/font_color_hover = Color( 0.807843, 0.588235, 0.788235, 1 )
+Button/colors/font_color_pressed = Color( 0.654902, 0.188235, 0.517647, 1 )
+CheckBox/icons/checked = ExtResource( 3 )
+CheckBox/icons/unchecked = ExtResource( 2 )

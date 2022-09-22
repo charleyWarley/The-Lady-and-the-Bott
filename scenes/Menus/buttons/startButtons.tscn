@@ -25,6 +25,7 @@ margin_bottom = 25.0
 theme = ExtResource( 2 )
 custom_styles/focus = SubResource( 1 )
 toggle_mode = true
+button_mask = 0
 text = "new game"
 flat = true
 align = 0
@@ -36,6 +37,7 @@ margin_bottom = 50.0
 theme = ExtResource( 2 )
 custom_styles/focus = SubResource( 1 )
 toggle_mode = true
+button_mask = 0
 text = "load game"
 flat = true
 align = 0
@@ -47,10 +49,7 @@ margin_bottom = 75.0
 theme = ExtResource( 2 )
 custom_styles/focus = SubResource( 3 )
 toggle_mode = true
+button_mask = 0
 text = "options"
 flat = true
 align = 0
-
-[connection signal="button_up" from="vBoxContainer/newGame" to="vBoxContainer/newGame" method="_on_SinglePlayer_button_up"]
-[connection signal="button_up" from="vBoxContainer/loadGame" to="vBoxContainer/loadGame" method="_on_MultiPlayer_button_up"]
-[connection signal="button_up" from="vBoxContainer/options" to="vBoxContainer/options" method="_on_Language_button_up"]

@@ -34,7 +34,8 @@ _global_script_class_icons={
 
 config/name="The Lady and the Power Bott"
 run/main_scene="res://scenes/UI/Control.tscn"
-boot_splash/image="res://sprites/logoSmall - png.png"
+boot_splash/image="res://sprites/logoSmallv2 - png.png"
+boot_splash/bg_color=Color( 0.0313726, 0.00392157, 0.0588235, 1 )
 config/icon="res://sprites/icons/Savya.png"
 config/windows_native_icon="res://Savya.ico"
 config/size/resizable=true
@@ -47,10 +48,16 @@ Global="*res://Scripts/globalScripts/global.gd"
 Abilities="*res://Scripts/globalScripts/abilities.gd"
 Inputs="*res://Scripts/globalScripts/inputs.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+
 [display]
 
 window/size/width=256
 window/size/height=240
+window/size/test_width=512
+window/size/test_height=480
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
@@ -272,6 +279,10 @@ buffering/agile_event_flushing=true
 [locale]
 
 translations=PoolStringArray( "res://localization/SavyaTranslation - strings (2).de.translation", "res://localization/SavyaTranslation - strings (2).en.translation", "res://localization/SavyaTranslation - strings (2).ja.translation", "res://localization/SavyaTranslation - strings (2).ro.translation" )
+
+[physics]
+
+2d/default_gravity=100
 
 [rendering]
 

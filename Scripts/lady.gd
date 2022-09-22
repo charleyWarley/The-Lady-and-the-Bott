@@ -3,6 +3,7 @@ extends KinematicBody2D
 #signal camera_shake
 signal damage_taken(damage, direction)
 signal world_changed
+signal gravity_shifted(direction)
 
 const SOUNDS = {
 	"jump": preload("res://audio/sfx/jumpEffort.wav"),
@@ -17,7 +18,8 @@ enum drags {
 	TURN = 5
 	AIR = 15
 	BASIC = 18
-	STOP = 95
+	TOP = 30
+	STOP = 80
 }
 
 enum jump_powers {
@@ -28,6 +30,7 @@ enum jump_powers {
 
 enum speeds {
 	SLOW = 1
+	TOP = 2
 	WALK = 3
 	RUN = 4 
 	CLIMB = 18
@@ -87,9 +90,9 @@ onready var sideSprite8 = sideSprites.get_child(0)
 onready var sideSprite32 = sideSprites.get_child(1)
 onready var topSprite8 = topSprites.get_child(0)
 onready var topSprite32 = topSprites.get_child(1)
-var spriteGroup8 : Array = []
-var spriteGroup32 : Array = []
-
+var spriteGroup8 : Array
+var spriteGroup32 : Array
+var gravityShift : Vector2
 
 export(NodePath) onready var sfx = get_node(sfx) as AudioStreamPlayer
 export(NodePath) onready var sfx2 = get_node(sfx2) as AudioStreamPlayer
@@ -115,7 +118,11 @@ func _on_AnimationPlayer_animation_finished(animName) -> void:
 			isInvinsible = false
 			print("invinsibility over")
 		
-
+func _on_gravity_shifted(direction):
+	return
+	#gravityShift = GRAV * direction
+	#print(gravityShift)
+	
 func _on_damage_taken(damage: int, dir: Vector2) -> void:
 	if isInvinsible: return
 	isInvinsible = true
@@ -138,6 +145,7 @@ func _on_damage_taken(damage: int, dir: Vector2) -> void:
 
 
 func _ready() -> void:
+	var _gravity_signal = connect("gravity_shifted", self, "_on_gravity_shifted")
 	var _damage_signal = connect("damage_taken", self, "_on_damage_taken")
 	set_visible(false)
 	spriteGroup32.append(topSprite32)
@@ -203,12 +211,9 @@ func set_velocity(delta) -> void:
 			if abs(horizontal_move) <= 0.0 and abs(vertical_move) <= 0.0:
 				isTurning = false
 				drag = float(drags.STOP)
-			elif sign(horizontal_move) != sign(velocity.x) and sign(vertical_move) != sign(velocity.y):
-				isTurning = true
-				drag = float(drags.TURN)
 			else:
 				isTurning = false
-				drag = float(drags.BASIC)
+				drag = float(drags.TOP)
 	else: 
 		isTurning = false
 		drag = float(drags.AIR)
@@ -221,7 +226,8 @@ func set_velocity(delta) -> void:
 		velocity.x = speeds.MAX * dir
 	var targetVelocity = get_target_velocity()
 	velocity = velocity.linear_interpolate(targetVelocity, 0.1)
-	velocity = move_and_slide(velocity + bounceForce, Vector2.UP, false, 4, PI/4, false)
+	velocity += bounceForce
+	velocity = move_and_slide(velocity, Vector2.UP, false, 4, PI/4, false)
 	set_deferred("bounceForce", Vector2.ZERO)
 
 
@@ -267,10 +273,10 @@ func check_anim() -> void:
 					if isTurning: 
 						play_anim("turn", "")
 						return
-					if speed == speeds.WALK: 
+					if !isRunning: 
 						play_anim("walk", "")
 						isRunning = false
-					elif speed == speeds.RUN: 
+					elif isRunning: 
 						isRunning = true
 						play_anim("run", "")
 		elif velocity.y < 0: play_anim("jump", "jump")
@@ -283,7 +289,7 @@ func check_anim() -> void:
 		if isGrounded and !Abilities.isHitting and !Abilities.isGrabbing:
 			if direction == Vector2.ZERO: play_anim("idle", "")
 			else: 
-				if speed == speeds.WALK: 
+				if !isRunning: 
 					if direction.x == 0:
 						if direction.y == 1: play_anim("walk_down", "")
 						elif direction.y == -1: play_anim("walk_up", "")
@@ -295,9 +301,7 @@ func check_anim() -> void:
 						if direction.y == 0: play_anim("walk_left", "")
 						elif direction.y > 0: play_anim("walk_downLeft", "")
 						elif direction.y < 0: play_anim("walk_upLeft", "")
-					isRunning = false
-				elif speed == speeds.RUN: 
-					isRunning = true
+				elif isRunning:
 					if direction.x == 0:
 						if direction.y == 1: play_anim("run_down", "")
 						elif direction.y == -1: play_anim("run_up", "")
@@ -310,21 +314,32 @@ func check_anim() -> void:
 						elif direction.y > 0: play_anim("run_downLeft", "")
 						elif direction.y < 0: play_anim("run_upLeft", "")
 	
+	
+func reset_speed():
+	if Global.moveType != Global.moveTypes.TOP: speed = speeds.WALK
+	else: speed = speeds.TOP
+	
 func _input(_event):
 	if Input.is_action_just_pressed("notif"): create_notif()
 	if Input.is_action_just_pressed("drop"): if items_in_hand != []: set_down()
-	if Input.is_action_pressed("run") and isGrounded: speed = speeds.RUN
-	elif Input.is_action_just_released("run"): speed = speeds.WALK
+	if Input.is_action_pressed("run") and isGrounded: 
+		isRunning = true
+		speed = speeds.RUN
+	elif Input.is_action_just_released("run"): 
+		isRunning = false
+		reset_speed()
+	elif Input.is_action_just_released("run"): reset_speed()
 	if Input.is_action_just_pressed("hit"): hit()
 	elif Input.is_action_just_pressed("use_ability"): use_ability()
-	elif Input.is_action_pressed("interact"): grab()
+	elif Input.is_action_pressed("interact"):
+		speed = speeds.SLOW
+		if Input.is_action_just_pressed("sav_down"): grab()
+		if Input.is_action_just_released("sav_down"): ungrab("set_down")
 	elif Input.is_action_just_pressed("change_ability"): Abilities.change_current_ability()
 	
-	#if Input.is_action_pressed("use_ability") and Abilities.current_ability == Abilities.abilities.LAUNCH and !Abilities.isGrabbing: 
-	
-	#if Input.is_action_just_released("use_ability"): deactivate_ability()
+	if Input.is_action_just_released("use_ability"): deactivate_ability()
 	if Input.is_action_just_released("hit"): Abilities.isHitting = false
-	elif Input.is_action_just_released("interact"): ungrab("set_down")
+	if Input.is_action_just_released("interact"): reset_speed()
 
 func use_ability() -> void:
 	match Abilities.current_ability:
@@ -341,7 +356,7 @@ func use_ability() -> void:
 func deactivate_ability() -> void:
 	match Abilities.current_ability:
 		Abilities.abilities.NONE: pass
-		Abilities.abilities.LAUNCH: ungrab("launch")
+		Abilities.abilities.LAUNCH: pass #ungrab("launch")
 		Abilities.abilities.HANG: unhang()
 		Abilities.abilities.TRANSLATE: untranslate()
 	print("ability deactivated")
@@ -373,7 +388,7 @@ func launch() -> void:
 
 func ungrab(followup) -> void:
 	Abilities.isGrabbing = false
-	speed = speeds.WALK
+	reset_speed()
 	match followup: 
 		"set_down": set_down()
 		"launch": launch()
@@ -614,6 +629,7 @@ func topdown_movement(drag, delta) -> Vector2:
 
 func check_x(drag, delta) -> float:
 	velocity.x *= pow(1 - drag, delta * 10)
+	if gravityShift != Vector2.ZERO: velocity.x *= gravityShift.x
 	return velocity.x
 
 
@@ -641,6 +657,8 @@ func check_y() -> float:
 	if isGrounded and velocity.y > 0: velocity.y = 0
 	elif !wasGrounded and isGrounded and timeDifference < JUMP_BUFFER:
 		jump()
+	if gravityShift != Vector2.ZERO:
+		velocity.y *= gravityShift.y
 	return velocity.y
 
 

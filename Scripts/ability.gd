@@ -4,7 +4,7 @@ const ICONS = {
 	"none": preload("res://sprites/icons/heart_empty.png"),
 	"launch": preload("res://sprites/icons/heart.png"),
 	"hang": preload("res://sprites/icons/wand.png"),
-	"stomp": preload("res://sprites/icons/arrow_diamond.png")
+	"translate": preload("res://sprites/icons/arrow_diamond.png")
 }
 
 onready var sprite = $Sprite
@@ -19,7 +19,7 @@ func check_icon():
 		Abilities.abilities.NONE: change_icon("none")
 		Abilities.abilities.LAUNCH: change_icon("launch")
 		Abilities.abilities.HANG: change_icon("hang")
-		Abilities.abilities.STOMP: change_icon("stomp")
+		Abilities.abilities.TRANSLATE: change_icon("translate")
 
 
 
